@@ -16,6 +16,6 @@ test("escape-dense text grows the output instead of overflowing it", {
     src.push_str("\"");
     i = (i + usize(1));
   });
-  html := markdown_to_html(src, default_options());
+  html := markdown_to_html(&src, default_options());
   assert(html.len() == usize(30008), `expected <p> + 5000 &quot; + </p>\n, got ${html.len().to_string()} bytes`);
 });

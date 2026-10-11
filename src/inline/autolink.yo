@@ -237,7 +237,7 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   state.*.push_pending();
 
   // Emit link open
-  (href_idx : i32) = state.*.store_string(link_href);
+  (href_idx : i32) = state.*.store_string(&link_href);
   (tok : InlineToken) = InlineToken(
     type_name : .LinkOpen,
     start : content_start,
@@ -262,7 +262,7 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   // Email autolinks use raw source bytes (no mailto: prefix in display)
   if(is_uri && !is_email, {
     (display_text : String) = normalize_link_text(str.from_raw_parts(state.*.stored_ptr(href_idx), usize(state.*.stored_len(href_idx))));
-    (content_idx : i32) = state.*.store_string(display_text);
+    (content_idx : i32) = state.*.store_string(&display_text);
     (text_tok : InlineToken) = InlineToken(
       type_name : .Text,
       start : i32(0),

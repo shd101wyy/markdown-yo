@@ -299,7 +299,7 @@ impl(
     });
     if(needs_normalize, {
       (norm_src : ArrayList(u8)) = _normalize_source(src_p, len);
-      return(_build_block_state_from_normalized(norm_src, env, renderer, options));
+      return(_build_block_state_from_normalized(&norm_src, env, renderer, options));
     });
 
     // Line scanning: precompute line markers

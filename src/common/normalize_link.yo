@@ -464,7 +464,7 @@ normalize_link_buf :: (fn(url_ptr : *u8, url_len : i32, out : *ArrayList(u8)) ->
           // Rare path: decode + punycode-encode the domain
           (result : String) = normalize_link(str.from_raw_parts(url_ptr, usize(url_len)));
           out.*.clear();
-          append_string(out, result);
+          append_string(out, &result);
         });
       });
     });

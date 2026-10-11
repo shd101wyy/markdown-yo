@@ -262,17 +262,17 @@ main :: (fn() -> unit)({
     file_path,
     .Some(path) => {
       match(
-        _read_file(path),
+        _read_file(&path),
         .Some(content) => {
           if(repeat_count > i32(1), {
             // Benchmark mode: run N iterations silently (for external timing)
             (ri : i32) = i32(0);
             while(ri < repeat_count, {
-              result := markdown_to_html(content, opts);
+              result := markdown_to_html(&content, &opts);
               ri = (ri + i32(1));
             });
           }, {
-            result := markdown_to_html(content, opts);
+            result := markdown_to_html(&content, &opts);
             cstr := result.to_cstr();
             match(
               cstr.ptr(),
@@ -294,11 +294,11 @@ main :: (fn() -> unit)({
         if(repeat_count > i32(1), {
           (ri : i32) = i32(0);
           while(ri < repeat_count, {
-            result := markdown_to_html(content, opts);
+            result := markdown_to_html(&content, &opts);
             ri = (ri + i32(1));
           });
         }, {
-          result := markdown_to_html(content, opts);
+          result := markdown_to_html(&content, &opts);
           cstr := result.to_cstr();
           match(
             cstr.ptr(),

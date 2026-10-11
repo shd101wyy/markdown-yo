@@ -1228,7 +1228,7 @@ impl(
     self.*.source_attr();
     if(lang_start < lang_end, {
       self.*.lit("><code class=\"");
-      self.*.push_string(self.*.options.*.lang_prefix);
+      self.*.push_string(&self.*.options.*.lang_prefix);
       self.*.escaped_unesc(lang_start, lang_end);
       self.*.lit("\">");
     }, {
@@ -1548,7 +1548,7 @@ impl(
     (title : String) = self.*.img_title;
     if(title.len() > usize(0), {
       self.*.lit("\" title=\"");
-      self.*.escaped_string(title);
+      self.*.escaped_string(&title);
     });
     cond(
       self.*.options.*.xhtml_out => self.*.lit("\" />"),

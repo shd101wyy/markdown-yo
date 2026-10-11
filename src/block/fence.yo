@@ -163,7 +163,7 @@ block_fence :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent
   r.*.source_attr();
   if(lang_start < lang_end, {
     r.*.lit("><code class=\"");
-    r.*.push_string(r.*.options.*.lang_prefix);
+    r.*.push_string(&r.*.options.*.lang_prefix);
     r.*.escaped_unesc(lang_start, lang_end);
     r.*.lit("\">");
   }, {

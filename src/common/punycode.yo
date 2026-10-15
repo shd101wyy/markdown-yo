@@ -167,7 +167,9 @@ punycode_encode :: (fn(input : str) -> String)({
   (src : *u8) = input.ptr();
   (len : i32) = i32(input.len());
 
-  // First, decode UTF-8 to codepoints
+  // First, decode UTF-8 to codepoints. Every continuation read is bounds-checked:
+  // normalize_link percent-decodes a domain into a fresh buffer and hands it here,
+  // so `[l](http://a%F0/)` arrives as a truncated sequence at the buffer's end.
   (codepoints : ArrayList(i32)) = ArrayList(i32).new();
   (p : i32) = i32(0);
   while(p < len, {
@@ -176,16 +178,22 @@ punycode_encode :: (fn(input : str) -> String)({
     if(b < i32(0x80), {
       cp = b;
       p = (p + i32(1));
-    }, if((b >= i32(0xC0)) && (b < i32(0xE0)), {
+    }, if((b >= i32(0xC0)) && (b < i32(0xE0)) && ((p + i32(1)) < len), {
       cp = (((b - i32(0xC0)) * i32(64)) + (i32((src.add(usize(p + i32(1)))).*) - i32(0x80)));
       p = (p + i32(2));
-    }, if((b >= i32(0xE0)) && (b < i32(0xF0)), {
+    }, if((b >= i32(0xE0)) && (b < i32(0xF0)) && ((p + i32(2)) < len), {
       cp = (((b - i32(0xE0)) * i32(4096)) + ((i32((src.add(usize(p + i32(1)))).*) - i32(0x80)) * i32(64)) + (i32((src.add(usize(p + i32(2)))).*) - i32(0x80)));
       p = (p + i32(3));
-    }, {
+    }, if((b >= i32(0xF0)) && (b < i32(0xF8)) && ((p + i32(3)) < len), {
       cp = (((b - i32(0xF0)) * i32(262144)) + ((i32((src.add(usize(p + i32(1)))).*) - i32(0x80)) * i32(4096)) + ((i32((src.add(usize(p + i32(2)))).*) - i32(0x80)) * i32(64)) + (i32((src.add(usize(p + i32(3)))).*) - i32(0x80)));
       p = (p + i32(4));
-    })));
+    }, {
+      // A sequence truncated by the end of the label, a bare continuation
+      // byte (0x80..0xBF) or a never-valid lead (0xF8..0xFF): one U+FFFD,
+      // and no read past `len`.
+      cp = i32(0xFFFD);
+      p = (p + i32(1));
+    }))));
     _ := codepoints.push(cp);
   });
 

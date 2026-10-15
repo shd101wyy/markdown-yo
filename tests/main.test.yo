@@ -25,7 +25,9 @@ test("escape-dense text grows the output instead of overflowing it", {
 // (a truncated lead) or a trailing `%80` (a bare continuation byte, reached
 // once the domain holds a `%C0`+ escape) read up to 3 bytes past the
 // allocation and emitted them into the href.
-// Each invalid byte now decodes to U+FFFD, as markdown-it's mdurl.decode does.
+// Each invalid byte now decodes to U+FFFD. The expected labels pin today's
+// domain re-encoding, which punycodes literal escapes where markdown-it keeps
+// them (issues/literal-percent-escapes-in-a-domain-are-punycoded.md).
 test("punycode of a truncated percent-decoded UTF-8 domain stays in bounds", {
   (truncated : String) = String.from("[l](http://a%F0/)\n");
   html := markdown_to_html(&truncated, default_options());

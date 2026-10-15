@@ -22,17 +22,18 @@ test("escape-dense text grows the output instead of overflowing it", {
 
 // normalize_link percent-decodes a domain into a fresh, exactly-sized buffer,
 // and punycode_encode decoded it as UTF-8 reading p+1..p+3 unchecked: `%F0`
-// (a truncated lead) or `%80` (a bare continuation byte) at the end of the
-// domain read up to 3 bytes past the allocation and emitted them into the href.
+// (a truncated lead) or a trailing `%80` (a bare continuation byte, reached
+// once the domain holds a `%C0`+ escape) read up to 3 bytes past the
+// allocation and emitted them into the href.
 // Each invalid byte now decodes to U+FFFD, as markdown-it's mdurl.decode does.
 test("punycode of a truncated percent-decoded UTF-8 domain stays in bounds", {
   (truncated : String) = String.from("[l](http://a%F0/)\n");
   html := markdown_to_html(&truncated, default_options());
   assert(html == String.from("<p><a href=\"http://xn--a-q10i/\">l</a></p>\n"), `%F0 domain: got ${html}`);
 
-  (continuation : String) = String.from("[l](http://a%80/)\n");
+  (continuation : String) = String.from("[l](http://a%C3%A3%80/)\n");
   html2 := markdown_to_html(&continuation, default_options());
-  assert(html2 == String.from("<p><a href=\"http://xn--a-q10i/\">l</a></p>\n"), `%80 domain: got ${html2}`);
+  assert(html2 == String.from("<p><a href=\"http://xn--a-yfa2307q/\">l</a></p>\n"), `%C3%A3%80 domain: got ${html2}`);
 
   (valid : String) = String.from("[l](http://a%C3%A3/)\n");
   html3 := markdown_to_html(&valid, default_options());

@@ -18,7 +18,7 @@ pragma(Pragma.AllowUnsafe);
 
 // 128-byte lookup table: 1 if char can start a block rule, 0 otherwise
 // Block starters: # * + - < > ` ~ _ | 0-9
-(_block_start_table_ptr : Option(*u8)) = .None;
+(mut(_block_start_table_ptr) : Option(*u8)) = .None;
 _init_block_start_table :: (fn() -> *u8)({
   (ptr : *u8) = match(
     unsafe(calloc(usize(128), usize(1))),

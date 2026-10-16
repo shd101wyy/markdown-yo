@@ -40,7 +40,7 @@ pragma(Pragma.AllowUnsafe);
 { string_bytes } :: import("./common/utils.yo");
 
 // Thread-local state for last result length
-(g_last_result_len : i32) = i32(0);
+(mut(g_last_result_len) : i32) = i32(0);
 
 // Empty main — required for Yo runtime init when WASM module loads
 main :: (fn() -> unit)(());

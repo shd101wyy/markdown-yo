@@ -168,7 +168,7 @@ utf8_byte_len :: (fn(lead : u8) -> i32)(
 // 256-byte lookup table for HTML escape dispatch.
 // 0 = safe (no escape needed), non-zero = index into replacement table.
 // Initialized once, shared across all calls.
-(_html_esc_table_ptr : Option(*u8)) = .None;
+(mut(_html_esc_table_ptr) : Option(*u8)) = .None;
 
 _init_html_esc_table :: (fn() -> *u8)({
   (ptr : *u8) = match(

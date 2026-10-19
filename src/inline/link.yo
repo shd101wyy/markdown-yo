@@ -654,10 +654,11 @@ inline_link_open :: (fn(state : *(InlineState)) -> bool)({
     });
   }, {
     if((ch == i32(0x5B)), {
-      // For non-image links, check if link nesting is too deep
-      if(((state.*.link_level > i32(0)) && !(is_image)), {
-        // Links cannot nest inside links (but images can nest inside links)
-      });
+      // For non-image links, check if link nesting is too deep; links cannot
+      // nest inside links (but images can nest inside links) —
+      // issues/fixed/2026-10-18-an-empty-struct-literal-is-accepted-where-unit-is-expected.md
+      // (in the Yo compiler): a brace group without a semicolon is a record.
+      if(((state.*.link_level > i32(0)) && !(is_image)), ());
       bracket_pos = (pos + i32(1));
     }, {
       return(false);

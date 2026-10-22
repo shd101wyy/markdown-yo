@@ -37,8 +37,8 @@ inline_math :: (fn(state : *InlineState) -> bool)({
     // Block math: $$...$$
     (content_start : i32) = (pos + i32(2));
     // Scan for closing $$
-    (p : i32) = content_start;
-    (found : bool) = false;
+    (mut(p) : i32) = content_start;
+    (mut(found) : bool) = false;
     while(((p + i32(1)) < max) && !found, {
       (c : u8) = (state.*.src_ptr.add(usize(p))).*;
       if(i32(c) == i32(0x5C), {
@@ -98,8 +98,8 @@ inline_math :: (fn(state : *InlineState) -> bool)({
     (first_ch : u8) = (state.*.src_ptr.add(usize(content_start))).*;
     // Allow if first char is not space, or we handle space checking below
     // Scan for closing $ (not preceded by backslash, not $$)
-    (p : i32) = content_start;
-    (found : bool) = false;
+    (mut(p) : i32) = content_start;
+    (mut(found) : bool) = false;
     while((p < max) && !found, {
       (c : u8) = (state.*.src_ptr.add(usize(p))).*;
       cond(
@@ -138,8 +138,8 @@ inline_math :: (fn(state : *InlineState) -> bool)({
     // Content must not start and end with a space (but can if it's all spaces)
     if((first_ch == u8(0x20)) && ((state.*.src_ptr.add(usize(p - i32(1)))).* == u8(0x20)), {
       // Check if content is all spaces — if so, allow it; otherwise reject
-      (all_spaces : bool) = true;
-      (si : i32) = content_start;
+      (mut(all_spaces) : bool) = true;
+      (mut(si) : i32) = content_start;
       while((si < p) && all_spaces, {
         if((state.*.src_ptr.add(usize(si))).* != u8(0x20), {
           all_spaces = false;

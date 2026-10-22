@@ -51,7 +51,7 @@ check_callout_marker :: (
   });
 
   // Parse type word (alphanumeric, hyphen, underscore)
-  (pos : i32) = (start + i32(2));
+  (mut(pos) : i32) = (start + i32(2));
   (ts : i32) = pos;
   while((pos < max) && (
     (((state.*.src_ptr.add(usize(pos))).* >= u8(0x61)) && ((state.*.src_ptr.add(usize(pos))).* <= u8(0x7A))) ||
@@ -77,7 +77,7 @@ check_callout_marker :: (
   pos = (pos + i32(1));
 
   // Optional foldable marker: + or -
-  (fold : i32) = i32(0);
+  (mut(fold) : i32) = i32(0);
   if(pos < max, {
     (ch : u8) = (state.*.src_ptr.add(usize(pos))).*;
     if(ch == u8(0x2B), {
@@ -100,7 +100,7 @@ check_callout_marker :: (
   type_end_out.* = te;
   title_start_out.* = pos;
   // Trim trailing spaces from title
-  (title_end : i32) = max;
+  (mut(title_end) : i32) = max;
   while((title_end > pos) && ((state.*.src_ptr.add(usize(title_end - i32(1)))).* == u8(0x20)), {
     title_end = (title_end - i32(1));
   });
@@ -114,7 +114,7 @@ _callout_eq_ci :: (fn(src : *u8, start : i32, end : i32, lit : *u8, lit_len : i3
   if((end - start) != lit_len, {
     return(false);
   });
-  (i : i32) = i32(0);
+  (mut(i) : i32) = i32(0);
   while(i < lit_len, {
     (a : u8) = (src.add(usize(start + i))).*;
     (b : u8) = (lit.add(usize(i))).*;

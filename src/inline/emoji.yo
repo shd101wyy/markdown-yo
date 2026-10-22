@@ -35,7 +35,7 @@ inline_emoji :: (fn(state : *InlineState) -> bool)({
   });
 
   // Scan for closing ':'
-  (p : i32) = (pos + i32(2));
+  (mut(p) : i32) = (pos + i32(2));
   while((p < max) && _is_emoji_char(i32((state.*.src_ptr.add(usize(p))).*)), {
     p = (p + i32(1));
   });

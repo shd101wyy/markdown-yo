@@ -37,7 +37,7 @@ check_footnote_def :: (
     return(false);
   }); // ^
   // Parse label: everything until ']', no spaces or newlines
-  (pos : i32) = (start + i32(2));
+  (mut(pos) : i32) = (start + i32(2));
   (ls : i32) = pos;
   while((pos < max) && ((state.*.src_ptr.add(usize(pos))).* != u8(0x5D)), {
     (ch : u8) = (state.*.src_ptr.add(usize(pos))).*;

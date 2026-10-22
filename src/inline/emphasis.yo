@@ -10,7 +10,7 @@ pragma(Pragma.AllowUnsafe);
 
 // Scan delimiter run for open/close properties (CommonMark §6.2)
 _scan_delims :: (fn(state : *InlineState, start : i32, marker : u8) -> i32)({
-  (pos : i32) = start;
+  (mut(pos) : i32) = start;
   (max : i32) = state.*.pos_max;
 
   // Count consecutive markers
@@ -44,8 +44,8 @@ _scan_delims :: (fn(state : *InlineState, start : i32, marker : u8) -> i32)({
   // or followed by whitespace or punct
   (right_flanking : bool) = (!is_last_ws && (!is_last_punct || (is_next_ws || is_next_punct)));
 
-  (can_open : bool) = false;
-  (can_close : bool) = false;
+  (mut(can_open) : bool) = false;
+  (mut(can_close) : bool) = false;
 
   if(i32(marker) == i32(0x5F), {
     // _ : stricter rules — not intraword
@@ -58,7 +58,7 @@ _scan_delims :: (fn(state : *InlineState, start : i32, marker : u8) -> i32)({
   });
 
   // Encode: count in bits 0-15, can_open in bit 16, can_close in bit 17
-  (result : i32) = count;
+  (mut(result) : i32) = count;
   if(can_open, {
     result = (result | i32(0x10000));
   });

@@ -31,8 +31,8 @@ _check_protocol :: (fn(buf : *(u8), buf_len : i32) -> bool)({
   });
 
   // Find the colon position (protocol separator)
-  (colon_pos : i32) = (i32(0) - i32(1));
-  (i : i32) = i32(0);
+  (mut(colon_pos) : i32) = (i32(0) - i32(1));
+  (mut(i) : i32) = i32(0);
   while((i < buf_len) && (i < i32(25)), {
     (b : u8) = (buf.add(usize(i))).*;
     if((b == u8(0x3A)), {
@@ -168,7 +168,7 @@ validate_link_url :: (fn(src : *(u8), start : i32, end_pos : i32, decoded : *(Ar
 
   // Decode entities in the URL prefix (only need ~32 decoded bytes for protocol check)
   decoded.*.clear();
-  (i : i32) = start;
+  (mut(i) : i32) = start;
   (max : i32) = cond(
     ((start + i32(64)) < end_pos) => (start + i32(64)),
     true => end_pos
@@ -198,7 +198,7 @@ validate_link_url :: (fn(src : *(u8), start : i32, end_pos : i32, decoded : *(Ar
 // Parse link destination: either <...> or a bare URL
 // Returns end position or -1 on failure
 _parse_link_dest :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
-  (pos : i32) = start;
+  (mut(pos) : i32) = start;
   if((pos >= max), {
     return((i32(0) - i32(1)));
   });
@@ -207,7 +207,7 @@ _parse_link_dest :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
   if((ch == i32(0x3C)), {
     // <...> form
     pos = (pos + i32(1));
-    (found : bool) = false;
+    (mut(found) : bool) = false;
     while((pos < max) && !(found), {
       (c : i32) = i32((src.add(usize(pos))).*);
       if(((c == i32(0x0A)) || (c == i32(0x3C))), {
@@ -231,8 +231,8 @@ _parse_link_dest :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
     (pos + i32(1))
   }, {
     // Bare URL: no spaces/newlines, balanced parens
-    (level : i32) = i32(0);
-    (done : bool) = false;
+    (mut(level) : i32) = i32(0);
+    (mut(done) : bool) = false;
     while((pos < max) && !(done), {
       (c : i32) = i32((src.add(usize(pos))).*);
       if((is_space(c) || (c == i32(0x0A))), {
@@ -279,7 +279,7 @@ _parse_link_dest :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
 // Parse link title: "...", '...', or (...)
 // Returns end position (after closing quote) or -1
 _parse_link_title :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
-  (pos : i32) = start;
+  (mut(pos) : i32) = start;
   if((pos >= max), {
     return((i32(0) - i32(1)));
   });
@@ -295,7 +295,7 @@ _parse_link_title :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
   );
 
   pos = (pos + i32(1));
-  (found : bool) = false;
+  (mut(found) : bool) = false;
   while((pos < max) && !(found), {
     (c : i32) = i32((src.add(usize(pos))).*);
     if((c == close_marker), {
@@ -319,8 +319,8 @@ _parse_link_title :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
 
 // Find matching ] for an opening [ starting at pos
 _find_close_bracket :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
-  (pos : i32) = start;
-  (level : i32) = i32(1);
+  (mut(pos) : i32) = start;
+  (mut(level) : i32) = i32(1);
   while((pos < max) && (level > i32(0)), {
     (c : i32) = i32((src.add(usize(pos))).*);
     if((c == i32(0x5C)), {
@@ -347,8 +347,8 @@ _find_close_bracket :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
 // Normalize a reference label: trim, collapse whitespace, lowercase ASCII
 _normalize_label :: (fn(src : *(u8), start : i32, end : i32) -> String)({
   (result : ArrayList(u8)) = ArrayList(u8).new();
-  (p : i32) = start;
-  (last_was_space : bool) = true;
+  (mut(p) : i32) = start;
+  (mut(last_was_space) : bool) = true;
 
   while(p < end, {
     (b : u8) = (src.add(usize(p))).*;
@@ -362,8 +362,8 @@ _normalize_label :: (fn(src : *(u8), start : i32, end : i32) -> String)({
     }, {
       last_was_space = false;
       // Decode UTF-8 to get codepoint
-      (cp : i32) = i32(0);
-      (bytes_consumed : i32) = i32(1);
+      (mut(cp) : i32) = i32(0);
+      (mut(bytes_consumed) : i32) = i32(1);
       if((ch_byte < i32(0x80)), {
         cp = ch_byte;
       }, if(((ch_byte >= i32(0xC0)) && (ch_byte < i32(0xE0))), {
@@ -476,25 +476,25 @@ _normalize_label :: (fn(src : *(u8), start : i32, end : i32) -> String)({
 // Shrinks text tokens and appends resolved pairs to state.resolved_pairs.
 // After calling, the caller should truncate delimiters to start_idx.
 _resolve_scoped_emphasis :: (fn(state : *(InlineState), start_idx : i32, end_idx : i32) -> unit)({
-  (closer_idx : i32) = start_idx;
+  (mut(closer_idx) : i32) = start_idx;
 
   while(closer_idx < end_idx, {
-    (closer : Delimiter) = state.*.delimiters(usize(closer_idx));
+    (mut(closer) : Delimiter) = state.*.delimiters(usize(closer_idx));
     (is_em_marker : bool) = ((i32(closer.marker) == i32(0x2A)) || (i32(closer.marker) == i32(0x5F)));
     (is_strike : bool) = (i32(closer.marker) == i32(0x7E));
     (is_mark : bool) = (i32(closer.marker) == i32(0x3D));
 
     if((closer.close && ((is_em_marker || is_strike) || is_mark)), {
-      (keep_matching : bool) = (closer.length > i32(0));
+      (mut(keep_matching) : bool) = (closer.length > i32(0));
       while(keep_matching, {
-        (opener_idx : i32) = (closer_idx - i32(1));
-        (found : bool) = false;
+        (mut(opener_idx) : i32) = (closer_idx - i32(1));
+        (mut(found) : bool) = false;
 
         // Only search back to start_idx — don't cross link scope boundary
         while((opener_idx >= start_idx) && !(found), {
           (opener : Delimiter) = state.*.delimiters(usize(opener_idx));
           if(((opener.marker == closer.marker) && (opener.open && (opener.length > i32(0)))), {
-            (skip : bool) = false;
+            (mut(skip) : bool) = false;
             if(is_em_marker, {
               if(((closer.open || opener.close) && (((opener.length + closer.length) % i32(3)) == i32(0))), {
                 if((((opener.length % i32(3)) != i32(0)) || ((closer.length % i32(3)) != i32(0))), {
@@ -604,7 +604,7 @@ _resolve_scoped_emphasis :: (fn(state : *(InlineState), start_idx : i32, end_idx
           closer = state.*.delimiters(usize(closer_idx));
 
           // Clear delimiters between opener and closer
-          (mid : i32) = (opener_idx + i32(1));
+          (mut(mid) : i32) = (opener_idx + i32(1));
           while(mid < closer_idx, {
             (d : Delimiter) = state.*.delimiters(usize(mid));
             addr_of(state.*.delimiters(usize(mid))).* = Delimiter(
@@ -639,8 +639,8 @@ inline_link_open :: (fn(state : *(InlineState)) -> bool)({
 
   (ch : i32) = i32((state.*.src_ptr.add(usize(pos))).*);
 
-  (is_image : bool) = false;
-  (bracket_pos : i32) = pos;
+  (mut(is_image) : bool) = false;
+  (mut(bracket_pos) : i32) = pos;
   if((ch == i32(0x21)), {
     if(((pos + i32(1)) < max), {
       if((i32((state.*.src_ptr.add(usize((pos + i32(1))))).*) == i32(0x5B)), {
@@ -705,7 +705,7 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
 
   // Find last active link marker, but handle inactive markers specially
   // when inside an image context (active image marker exists before them).
-  (marker_idx : i32) = (i32(state.*.link_markers.len()) - i32(1));
+  (mut(marker_idx) : i32) = (i32(state.*.link_markers.len()) - i32(1));
   if((marker_idx < i32(0)), {
     return(false);
   });
@@ -714,8 +714,8 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
     // Last marker is inactive. Check if there's an active image marker before it.
     // If yes, consume this inactive marker as text (so the image can match
     // the correct outer ]). If no, skip it and search for an active marker.
-    (has_earlier_image : bool) = false;
-    (j : i32) = i32(0);
+    (mut(has_earlier_image) : bool) = false;
+    (mut(j) : i32) = i32(0);
     while((j < marker_idx) && !(has_earlier_image), {
       if((state.*.link_markers(usize(j)).is_image && state.*.link_markers(usize(j)).active), {
         has_earlier_image = true;
@@ -730,7 +730,7 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
     }, {
       // Normal case: skip inactive markers and search for active one
       marker_idx = (marker_idx - i32(1));
-      (found_marker : bool) = false;
+      (mut(found_marker) : bool) = false;
       while((marker_idx >= i32(0)) && !(found_marker), {
         if(state.*.link_markers(usize(marker_idx)).active, {
           found_marker = true;
@@ -750,20 +750,20 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
   (after_close : i32) = (pos + i32(1));
 
   // Try to parse what follows ]
-  (href_start : i32) = i32(0);
-  (href_end : i32) = i32(0);
-  (title_start : i32) = i32(0);
-  (title_end : i32) = i32(0);
-  (link_end : i32) = (i32(0) - i32(1));
+  (mut(href_start) : i32) = i32(0);
+  (mut(href_end) : i32) = i32(0);
+  (mut(title_start) : i32) = i32(0);
+  (mut(title_end) : i32) = i32(0);
+  (mut(link_end) : i32) = (i32(0) - i32(1));
 
   // Reference link state
-  (ref_href : String) = ``;
-  (ref_title : String) = ``;
-  (is_ref : bool) = false;
+  (mut(ref_href) : String) = ``;
+  (mut(ref_title) : String) = ``;
+  (mut(is_ref) : bool) = false;
 
   if(((after_close < max) && (i32((state.*.src_ptr.add(usize(after_close))).*) == i32(0x28))), {
     // Inline link: [text](url "title")
-    (p : i32) = (after_close + i32(1));
+    (mut(p) : i32) = (after_close + i32(1));
 
     // Skip whitespace (spaces, tabs, newlines)
     while((p < max) && (is_space(i32((state.*.src_ptr.add(usize(p))).*)) || (i32((state.*.src_ptr.add(usize(p))).*) == i32(0x0A))), {
@@ -812,8 +812,8 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
 
   if((link_end < i32(0)), {
     // Try reference: [text][label], [text][], [text]
-    (ref_start : i32) = (i32(0) - i32(1));
-    (ref_end : i32) = (i32(0) - i32(1));
+    (mut(ref_start) : i32) = (i32(0) - i32(1));
+    (mut(ref_end) : i32) = (i32(0) - i32(1));
     if(((after_close < max) && (i32((state.*.src_ptr.add(usize(after_close))).*) == i32(0x5B))), {
       (label_start : i32) = (after_close + i32(1));
       (label_end_pos : i32) = _find_close_bracket(state.*.src_ptr, label_start, max);
@@ -842,8 +842,8 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
         match(
           maybe_ref,
           .Some(r) => {
-            ref_href = r.href;
-            ref_title = r.title;
+            ref_href = r.href.clone();
+            ref_title = r.title.clone();
             is_ref = true;
           },
           .None => ()
@@ -938,7 +938,7 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
 
   // For non-image links, deactivate all earlier link markers (links can't nest)
   if(!(is_image), {
-    (i : i32) = i32(0);
+    (mut(i) : i32) = i32(0);
     while(i < marker_idx, {
       if(!(state.*.link_markers(usize(i)).is_image), {
         addr_of(state.*.link_markers(usize(i))).*.active = false;

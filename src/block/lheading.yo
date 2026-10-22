@@ -13,7 +13,7 @@ import("std/string");
 // Build inline content from multiple lines into the reusable _line_buf
 _build_lheading_inline_buf :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> unit)({
   state.*._line_buf.clear();
-  (line : i32) = start_line;
+  (mut(line) : i32) = start_line;
   while(line < end_line, {
     (bm : i32) = state.bm(line);
     (ts : i32) = state.ts(line);
@@ -21,7 +21,7 @@ _build_lheading_inline_buf :: (fn(state : *BlockState, start_line : i32, end_lin
     (content_start : i32) = (bm + ts);
 
     // Trim trailing spaces
-    (content_end : i32) = em;
+    (mut(content_end) : i32) = em;
     while((content_end > content_start) && is_space(i32((state.*.src_ptr.add(usize(content_end - i32(1)))).*)), {
       content_end = (content_end - i32(1));
     });
@@ -47,17 +47,17 @@ block_lheading :: (fn(state : *BlockState, start_line : i32, end_line : i32, sil
   state.*.parent_type = .Paragraph;
 
   // Scan forward looking for === or --- underline
-  (level : i32) = i32(0);
-  (next_line : i32) = (start_line + i32(1));
+  (mut(level) : i32) = i32(0);
+  (mut(next_line) : i32) = (start_line + i32(1));
 
-  (searching : bool) = true;
+  (mut(searching) : bool) = true;
   while((next_line < end_line) && !(state.*.is_empty(next_line)) && searching, {
     if((state.sc(next_line) - state.*.blk_indent) > i32(3), {
       // Lazy continuation
       next_line = (next_line + i32(1));
     }, {
       // Check for underline
-      (found_underline : bool) = false;
+      (mut(found_underline) : bool) = false;
       if(state.sc(next_line) >= state.*.blk_indent, {
         (pos : i32) = (state.bm(next_line) + state.ts(next_line));
         (max : i32) = state.em(next_line);
@@ -67,7 +67,7 @@ block_lheading :: (fn(state : *BlockState, start_line : i32, end_line : i32, sil
 
           if((marker == i32(0x2D)) || (marker == i32(0x3D)), {
             // Skip marker chars
-            (p : i32) = pos;
+            (mut(p) : i32) = pos;
             while((p < max) && (i32((state.*.src_ptr.add(usize(p))).*) == marker), {
               p = (p + i32(1));
             });
@@ -124,7 +124,7 @@ block_lheading :: (fn(state : *BlockState, start_line : i32, end_line : i32, sil
     (ts : i32) = state.ts(start_line);
     (em : i32) = state.em(start_line);
     (content_start : i32) = (bm + ts);
-    (content_end : i32) = em;
+    (mut(content_end) : i32) = em;
     while((content_end > content_start) && ((state.*.src_ptr.add(usize(content_end - i32(1)))).* == u8(0x20)), {
       content_end = (content_end - i32(1));
     });

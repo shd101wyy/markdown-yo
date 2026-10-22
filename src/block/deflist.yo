@@ -10,7 +10,7 @@ pragma(Pragma.AllowUnsafe);
 // Returns the position right after the marker character (before spaces), or -1
 // if not a valid definition marker line. The caller must skip spaces separately.
 skip_deflist_marker :: (fn(state : *BlockState, line : i32) -> i32)({
-  (start : i32) = (state.bm(line) + state.ts(line));
+  (mut(start) : i32) = (state.bm(line) + state.ts(line));
   (max : i32) = state.em(line);
 
   if(start >= max, {

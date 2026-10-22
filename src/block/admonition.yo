@@ -61,13 +61,13 @@ check_admonition_marker :: (
   });
 
   // Skip any additional identical marker chars
-  (pos : i32) = (start + i32(3));
+  (mut(pos) : i32) = (start + i32(3));
   while((pos < max) && ((state.*.src_ptr.add(usize(pos))).* == marker), {
     pos = (pos + i32(1));
   });
 
   // Collapsible state from marker kind; optional '+' only after '?'
-  (collapsible : i32) = i32(0);
+  (mut(collapsible) : i32) = i32(0);
   if(marker == u8(0x3F), {
     collapsible = i32(-1);
     if((pos < max) && ((state.*.src_ptr.add(usize(pos))).* == u8(0x2B)), {
@@ -112,7 +112,7 @@ check_admonition_marker :: (
   type_end_out.* = te;
   title_start_out.* = pos;
   // Trim trailing spaces from title
-  (title_end : i32) = max;
+  (mut(title_end) : i32) = max;
   while((title_end > pos) && ((state.*.src_ptr.add(usize(title_end - i32(1)))).* == u8(0x20)), {
     title_end = (title_end - i32(1));
   });

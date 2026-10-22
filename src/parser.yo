@@ -26,7 +26,10 @@ markdown_to_html :: (fn(src : &String, options : &Options) -> String)({
   (env : Env) = new_env();
 
   // 2. Get source pointer. The parse reads the source through raw pointers,
-  // so it works on one copy of the bytes, which `state` keeps alive.
+  // so it works on one copy of the bytes. This `src_bytes` local keeps them
+  // alive: it is declared before `state` and so dropped after it. (When the
+  // source needs normalization, `state` owns the normalized copy instead and
+  // points the renderer at it.)
   (src_bytes : ArrayList(u8)) = string_bytes(src);
   (src_len : i32) = i32(src_bytes.len());
   (src_ptr : *u8) = match(

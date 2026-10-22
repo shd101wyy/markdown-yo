@@ -102,29 +102,29 @@ main :: (fn() -> unit)({
   });
 
   // Parse flags
-  (html_enabled : bool) = false;
-  (typographer_enabled : bool) = false;
-  (no_lang_prefix : bool) = false;
-  (use_commonmark : bool) = false;
-  (enable_subscript : bool) = false;
-  (enable_superscript : bool) = false;
-  (enable_mark : bool) = false;
-  (enable_math : bool) = false;
-  (enable_emoji : bool) = false;
-  (enable_wikilink : bool) = false;
-  (enable_critic : bool) = false;
-  (enable_abbr : bool) = false;
-  (enable_deflist : bool) = false;
-  (enable_admonition : bool) = false;
-  (enable_callout : bool) = false;
-  (enable_footnote : bool) = false;
-  (enable_source_map : bool) = false;
-  (full_features : bool) = false;
-  (file_path : Option(String)) = .None;
-  (read_from_stdin : bool) = false;
-  (repeat_count : i32) = i32(1);
+  (mut(html_enabled) : bool) = false;
+  (mut(typographer_enabled) : bool) = false;
+  (mut(no_lang_prefix) : bool) = false;
+  (mut(use_commonmark) : bool) = false;
+  (mut(enable_subscript) : bool) = false;
+  (mut(enable_superscript) : bool) = false;
+  (mut(enable_mark) : bool) = false;
+  (mut(enable_math) : bool) = false;
+  (mut(enable_emoji) : bool) = false;
+  (mut(enable_wikilink) : bool) = false;
+  (mut(enable_critic) : bool) = false;
+  (mut(enable_abbr) : bool) = false;
+  (mut(enable_deflist) : bool) = false;
+  (mut(enable_admonition) : bool) = false;
+  (mut(enable_callout) : bool) = false;
+  (mut(enable_footnote) : bool) = false;
+  (mut(enable_source_map) : bool) = false;
+  (mut(full_features) : bool) = false;
+  (mut(file_path) : Option(String)) = .None;
+  (mut(read_from_stdin) : bool) = false;
+  (mut(repeat_count) : i32) = i32(1);
 
-  (ai : usize) = usize(1);
+  (mut(ai) : usize) = usize(1);
   while(ai < argv.len(), {
     (arg : String) = argv.get(ai).unwrap();
     cond(
@@ -203,7 +203,7 @@ main :: (fn() -> unit)({
     ai = (ai + usize(1));
   });
 
-  (opts : Options) = cond(
+  (mut(opts) : Options) = cond(
     use_commonmark => commonmark_options(),
     true => default_options()
   );
@@ -266,7 +266,7 @@ main :: (fn() -> unit)({
         .Some(content) => {
           if(repeat_count > i32(1), {
             // Benchmark mode: run N iterations silently (for external timing)
-            (ri : i32) = i32(0);
+            (mut(ri) : i32) = i32(0);
             while(ri < repeat_count, {
               result := markdown_to_html(&content, &opts);
               ri = (ri + i32(1));
@@ -292,7 +292,7 @@ main :: (fn() -> unit)({
       if(read_from_stdin, {
         content := _read_stdin();
         if(repeat_count > i32(1), {
-          (ri : i32) = i32(0);
+          (mut(ri) : i32) = i32(0);
           while(ri < repeat_count, {
             result := markdown_to_html(&content, &opts);
             ri = (ri + i32(1));

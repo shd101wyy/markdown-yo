@@ -101,8 +101,8 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   });
 
   // Find closing >
-  (p : i32) = (pos + i32(1));
-  (found_close : bool) = false;
+  (mut(p) : i32) = (pos + i32(1));
+  (mut(found_close) : bool) = false;
   while((p < max) && !found_close, {
     (ch : i32) = i32((state.*.src_ptr.add(usize(p))).*);
     if(ch == i32(0x3E), {
@@ -128,10 +128,10 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   });
 
   // Check for URI autolink: [a-zA-Z][a-zA-Z0-9+.-]{1,31}:[^ <>]*
-  (is_uri : bool) = false;
+  (mut(is_uri) : bool) = false;
   (first_ch : i32) = i32((state.*.src_ptr.add(usize(content_start))).*);
   if(_is_letter(first_ch), {
-    (sp : i32) = (content_start + i32(1));
+    (mut(sp) : i32) = (content_start + i32(1));
     while((sp < content_end) && _is_scheme_char(i32((state.*.src_ptr.add(usize(sp))).*)), {
       sp = (sp + i32(1));
     });
@@ -150,11 +150,11 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   });
 
   // Check for email autolink — build mailto href inline if valid
-  (email_href : String) = ``;
+  (mut(email_href) : String) = ``;
   if(!is_uri, {
     // Find @ position
-    (at_pos : i32) = (i32(0) - i32(1));
-    (ep : i32) = content_start;
+    (mut(at_pos) : i32) = (i32(0) - i32(1));
+    (mut(ep) : i32) = content_start;
     while(ep < content_end, {
       if(i32((state.*.src_ptr.add(usize(ep))).*) == i32(0x40), {
         at_pos = ep;
@@ -164,8 +164,8 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
 
     if((at_pos > content_start) && (at_pos < (content_end - i32(1))), {
       // Validate local part: [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+
-      (local_valid : bool) = true;
-      (lp : i32) = content_start;
+      (mut(local_valid) : bool) = true;
+      (mut(lp) : i32) = content_start;
       while((lp < at_pos) && local_valid, {
         if(!_is_email_local_char(i32((state.*.src_ptr.add(usize(lp))).*)), {
           local_valid = false;
@@ -174,10 +174,10 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
       });
 
       // Validate domain
-      (domain_valid : bool) = local_valid;
-      (has_dot : bool) = false;
+      (mut(domain_valid) : bool) = local_valid;
+      (mut(has_dot) : bool) = false;
       if(domain_valid, {
-        (dp : i32) = (at_pos + i32(1));
+        (mut(dp) : i32) = (at_pos + i32(1));
         // Must start with alphanumeric
         if(!_is_email_domain_char(i32((state.*.src_ptr.add(usize(dp))).*)) ||
           (i32((state.*.src_ptr.add(usize(dp))).*) == i32(0x2D)), {
@@ -227,7 +227,7 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   });
 
   // Build the href String for URI autolinks (raw content, no backslash processing)
-  (link_href : String) = email_href;
+  (mut(link_href) : String) = email_href;
   if(is_uri && !is_email, {
     (buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(content_len));
     buf.extend_from_ptr(state.*.src_ptr.add(usize(content_start)), usize(content_len));

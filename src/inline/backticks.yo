@@ -17,24 +17,24 @@ inline_backticks :: (fn(state : *InlineState) -> bool)({
   });
 
   // Count opening backticks
-  (open_count : i32) = i32(0);
-  (p : i32) = pos;
+  (mut(open_count) : i32) = i32(0);
+  (mut(p) : i32) = pos;
   while((p < state.*.pos_max) && (i32((state.*.src_ptr.add(usize(p))).*) == i32(0x60)), {
     open_count = (open_count + i32(1));
     p = (p + i32(1));
   });
 
   // Search for matching close
-  (search : i32) = p;
-  (found : bool) = false;
-  (close_start : i32) = i32(0);
-  (close_end : i32) = i32(0);
+  (mut(search) : i32) = p;
+  (mut(found) : bool) = false;
+  (mut(close_start) : i32) = i32(0);
+  (mut(close_end) : i32) = i32(0);
 
   while((search < state.*.pos_max) && !found, {
     if(i32((state.*.src_ptr.add(usize(search))).*) == i32(0x60), {
       // Count close backticks
-      (cnt : i32) = i32(0);
-      (cs : i32) = search;
+      (mut(cnt) : i32) = i32(0);
+      (mut(cs) : i32) = search;
       while((cs < state.*.pos_max) && (i32((state.*.src_ptr.add(usize(cs))).*) == i32(0x60)), {
         cnt = (cnt + i32(1));
         cs = (cs + i32(1));
@@ -68,8 +68,8 @@ inline_backticks :: (fn(state : *InlineState) -> bool)({
   // Strip one leading space and one trailing space if content starts and ends with
   // a space-like char (space or newline) and content is not all whitespace (CommonMark rule).
   // Newlines count because the renderer converts them to spaces.
-  (content_start : i32) = p;
-  (content_end : i32) = close_start;
+  (mut(content_start) : i32) = p;
+  (mut(content_end) : i32) = close_start;
   if((content_end - content_start) >= i32(2), {
     (first : i32) = i32((state.*.src_ptr.add(usize(content_start))).*);
     (last : i32) = i32((state.*.src_ptr.add(usize(content_end - i32(1)))).*);
@@ -77,8 +77,8 @@ inline_backticks :: (fn(state : *InlineState) -> bool)({
     (last_is_space : bool) = ((last == i32(0x20)) || (last == i32(0x0A)));
     if(first_is_space && last_is_space, {
       // Check content is not all whitespace — count non-whitespace chars
-      (non_space_count : i32) = i32(0);
-      (sp : i32) = content_start;
+      (mut(non_space_count) : i32) = i32(0);
+      (mut(sp) : i32) = content_start;
       while(sp < content_end, {
         (c : i32) = i32((state.*.src_ptr.add(usize(sp))).*);
         if((c != i32(0x20)) && (c != i32(0x0A)), {

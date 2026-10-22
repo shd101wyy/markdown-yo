@@ -43,7 +43,7 @@ _is_tag_ws :: (fn(ch : i32) -> bool)(
 // Returns end position (after '>') or -1 if not matched.
 // Pattern: <[A-Za-z][A-Za-z0-9-]* attribute* \s* /? >
 _try_open_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
-  (p : i32) = (pos + i32(1));
+  (mut(p) : i32) = (pos + i32(1));
   // Tag name: first letter already checked by caller
   while((p < max) && _is_tag_name_char(i32((src.add(usize(p))).*)), {
     p = (p + i32(1));
@@ -91,7 +91,7 @@ _try_open_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
     });
 
     // Optional = followed by value
-    (eq_p : i32) = p;
+    (mut(eq_p) : i32) = p;
     while((eq_p < max) && _is_tag_ws(i32((src.add(usize(eq_p))).*)), {
       eq_p = (eq_p + i32(1));
     });
@@ -144,7 +144,7 @@ _try_open_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
             return(i32(0) - i32(1));
           });
           eq_p = (eq_p + i32(1));
-          (uq_done : bool) = false;
+          (mut(uq_done) : bool) = false;
           while((eq_p < max) && !uq_done, {
             (uv : i32) = i32((src.add(usize(eq_p))).*);
             if((uv == i32(0x22)) || (
@@ -176,7 +176,7 @@ _try_open_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
 // Try to match a close tag: </[A-Za-z][A-Za-z0-9-]*\s*>
 _try_close_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
   // pos is at '<', pos+1 is '/'
-  (p : i32) = (pos + i32(2));
+  (mut(p) : i32) = (pos + i32(2));
   if(p >= max, {
     return(i32(0) - i32(1));
   });
@@ -204,7 +204,7 @@ _try_close_tag :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
 // The `--` restriction was removed in newer CommonMark spec versions.
 _try_comment :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
   // pos is '<', pos+1 is '!', pos+2 is '-', pos+3 is '-'
-  (p : i32) = (pos + i32(4));
+  (mut(p) : i32) = (pos + i32(4));
   if(p >= max, {
     return(i32(0) - i32(1));
   });
@@ -259,7 +259,7 @@ _try_comment :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
 
 // Try to match processing instruction: <?...?>
 _try_processing :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
-  (p : i32) = (pos + i32(2));
+  (mut(p) : i32) = (pos + i32(2));
   while((p + i32(1)) <= max, {
     if((i32((src.add(usize(p))).*) == i32(0x3F)) &&
       (i32((src.add(usize(p + i32(1)))).*) == i32(0x3E)), {
@@ -273,7 +273,7 @@ _try_processing :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
 // Try to match declaration: <![A-Za-z][^>]*>
 _try_declaration :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
   // pos is '<', pos+1 is '!'
-  (p : i32) = (pos + i32(2));
+  (mut(p) : i32) = (pos + i32(2));
   if(p >= max, {
     return(i32(0) - i32(1));
   });
@@ -317,7 +317,7 @@ _try_cdata :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
   ), {
     return(i32(0) - i32(1));
   });
-  (p : i32) = (pos + i32(9));
+  (mut(p) : i32) = (pos + i32(9));
   while((p + i32(2)) <= max, {
     if((i32((src.add(usize(p))).*) == i32(0x5D)) &&
       (
@@ -348,7 +348,7 @@ inline_html :: (fn(state : *InlineState) -> bool)({
 
   (ch : i32) = i32((state.*.src_ptr.add(usize(pos + i32(1)))).*);
 
-  (end_pos : i32) = (i32(0) - i32(1));
+  (mut(end_pos) : i32) = (i32(0) - i32(1));
 
   if(_is_letter(ch), {
     // Open tag

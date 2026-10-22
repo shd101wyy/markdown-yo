@@ -68,7 +68,7 @@ _inline_dispatch :: (fn(state : *InlineState) -> unit)({
   (table : *u8) = state.*.special_table;
   // Main dispatch loop: try each inline rule at current position
   while(state.*.pos < state.*.pos_max, {
-    (matched : bool) = false;
+    (mut(matched) : bool) = false;
 
     (ch : i32) = i32((state.*.src_ptr.add(usize(state.*.pos))).*);
 
@@ -166,7 +166,7 @@ _inline_dispatch :: (fn(state : *InlineState) -> unit)({
 
     // If no rule matched, scan forward to next special char (lookup table)
     if(!matched, {
-      (scan : i32) = (state.*.pos + i32(1));
+      (mut(scan) : i32) = (state.*.pos + i32(1));
       (src : *u8) = state.*.src_ptr;
       (scan_max : i32) = state.*.pos_max;
       // 8-byte batch scan: check 8 bytes per iteration using u64 load
@@ -231,9 +231,9 @@ inline_parse_range :: (fn(inline_state : *InlineState, src_ptr : *u8, start : i3
   // Fast path: pre-scan using combined table (1=inline special, 2=HTML-escape-only).
   // Single table lookup per byte instead of table lookup + 4 comparisons.
   (table : *u8) = inline_state.*.special_table;
-  (p : i32) = start;
-  (has_special : bool) = false;
-  (has_html_char : bool) = false;
+  (mut(p) : i32) = start;
+  (mut(has_special) : bool) = false;
+  (mut(has_html_char) : bool) = false;
   // 8-byte batch pre-scan: quickly detect inline specials and HTML chars
   while((p + i32(7)) < end, {
     (w : u64) = (*u64)(src_ptr.add(usize(p))).*;

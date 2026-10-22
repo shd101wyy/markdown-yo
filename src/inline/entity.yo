@@ -51,8 +51,8 @@ inline_entity :: (fn(state : *InlineState) -> bool)({
     (ch2 : i32) = i32((state.*.src_ptr.add(usize(pos + i32(2)))).*);
     if((ch2 == i32(0x78)) || (ch2 == i32(0x58)), {
       // Hex: &#xHHHH;
-      (p : i32) = (pos + i32(3));
-      (digit_count : i32) = i32(0);
+      (mut(p) : i32) = (pos + i32(3));
+      (mut(digit_count) : i32) = i32(0);
       while((p < max) && _is_hex(i32((state.*.src_ptr.add(usize(p))).*)), {
         digit_count = (digit_count + i32(1));
         p = (p + i32(1));
@@ -86,8 +86,8 @@ inline_entity :: (fn(state : *InlineState) -> bool)({
       });
     }, {
       // Decimal: &#DDD;
-      (p : i32) = (pos + i32(2));
-      (digit_count : i32) = i32(0);
+      (mut(p) : i32) = (pos + i32(2));
+      (mut(digit_count) : i32) = i32(0);
       while((p < max) && _is_digit(i32((state.*.src_ptr.add(usize(p))).*)), {
         digit_count = (digit_count + i32(1));
         p = (p + i32(1));
@@ -123,8 +123,8 @@ inline_entity :: (fn(state : *InlineState) -> bool)({
   }, {
     // Named entity: &amp;, &lt; etc.
     if(_is_alnum(ch), {
-      (p : i32) = (pos + i32(2));
-      (name_len : i32) = i32(1);
+      (mut(p) : i32) = (pos + i32(2));
+      (mut(name_len) : i32) = i32(1);
       while((p < max) && ((name_len < i32(31)) && _is_alnum(i32((state.*.src_ptr.add(usize(p))).*))), {
         name_len = (name_len + i32(1));
         p = (p + i32(1));

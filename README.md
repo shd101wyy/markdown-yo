@@ -120,11 +120,11 @@ yo add shd101wyy/markdown_yo
 { println } :: import("std/fmt");
 
 main :: (fn() -> unit)({
-  (opts : Options) = default_options();
+  (mut(opts) : Options) = default_options();
   opts.html = true;
 
-  html := markdown_to_html(`# Hello\n\nSome **bold** text.`, opts);
-  println(html);
+  html := markdown_to_html(`# Hello\n\nSome **bold** text.`, &opts);
+  println(&html);
 });
 
 export(main);

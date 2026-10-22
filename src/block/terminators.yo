@@ -40,7 +40,7 @@ _init_block_start_table :: (fn() -> *u8)({
   (ptr.add(usize(0x5F))).* = u8(1); // _ hr
   (ptr.add(usize(0x7C))).* = u8(1); // | table
   // 0-9 ordered list
-  (d : i32) = i32(0x30);
+  (mut(d) : i32) = i32(0x30);
   while(d <= i32(0x39), {
     (ptr.add(usize(d))).* = u8(1);
     d = (d + i32(1));

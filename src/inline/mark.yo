@@ -21,8 +21,8 @@ inline_mark :: (fn(state : *InlineState) -> bool)({
   });
 
   // Count consecutive =
-  (count : i32) = i32(0);
-  (p : i32) = pos;
+  (mut(count) : i32) = i32(0);
+  (mut(p) : i32) = pos;
   while((p < state.*.pos_max) && (i32((state.*.src_ptr.add(usize(p))).*) == i32(0x3D)), {
     count = (count + i32(1));
     p = (p + i32(1));
@@ -48,7 +48,7 @@ inline_mark :: (fn(state : *InlineState) -> bool)({
   (is_next_punct : bool) = is_punct_char(char_after);
 
   // Left-flanking delimiter run
-  (can_open : bool) = !is_next_ws;
+  (mut(can_open) : bool) = !is_next_ws;
   if(is_next_punct, {
     if(!is_last_ws && !is_last_punct, {
       can_open = false;
@@ -56,7 +56,7 @@ inline_mark :: (fn(state : *InlineState) -> bool)({
   });
 
   // Right-flanking delimiter run
-  (can_close : bool) = !is_last_ws;
+  (mut(can_close) : bool) = !is_last_ws;
   if(is_last_punct, {
     if(!is_next_ws && !is_next_punct, {
       can_close = false;

@@ -56,10 +56,10 @@ _emit_quote_utf8 :: (fn(buf : *(ArrayList(u8)), kind : u8) -> unit)({
 // Compute opener_consumed and closer_consumed for a given token index.
 // Returns (opener_consumed << 16) | closer_consumed
 _compute_consumed :: (fn(pairs : *(ArrayList(EmphasisPair)), tok_idx : i32) -> i32)({
-  (opener : i32) = i32(0);
-  (closer : i32) = i32(0);
+  (mut(opener) : i32) = i32(0);
+  (mut(closer) : i32) = i32(0);
   (count : i32) = i32(pairs.*.len());
-  (i : i32) = i32(0);
+  (mut(i) : i32) = i32(0);
   while(i < count, {
     (p : EmphasisPair) = pairs.*(usize(i));
     if((p.opener_tok == tok_idx), {
@@ -90,15 +90,15 @@ _process_smartquotes :: (
   // Compute emphasis-aware nesting levels for each token.
   // Emphasis pairs increase the nesting level for tokens between them.
   (levels : ArrayList(i32)) = ArrayList(i32).with_capacity(usize(tok_count));
-  (li : i32) = i32(0);
+  (mut(li) : i32) = i32(0);
   while(li < tok_count, {
     _ := levels.push(i32(0));
     li = (li + i32(1));
   });
-  (pi : i32) = i32(0);
+  (mut(pi) : i32) = i32(0);
   while(pi < i32(pairs.*.len()), {
     (p : EmphasisPair) = pairs.*(usize(pi));
-    (ti : i32) = (p.opener_tok + i32(1));
+    (mut(ti) : i32) = (p.opener_tok + i32(1));
     while(ti < p.closer_tok, {
       addr_of(levels(usize(ti))).* = (levels(usize(ti)) + i32(1));
       ti = (ti + i32(1));
@@ -106,7 +106,7 @@ _process_smartquotes :: (
     pi = (pi + i32(1));
   });
 
-  (tok_i : i32) = i32(0);
+  (mut(tok_i) : i32) = i32(0);
   while(tok_i < tok_count, {
     (tok : InlineToken) = tokens.*(usize(tok_i));
     (this_level : i32) = (tok.level + levels(usize(tok_i)));
@@ -125,7 +125,7 @@ _process_smartquotes :: (
       (eff_start : i32) = (tok.start + (consumed & i32(0xFFFF)));
       (eff_end : i32) = (tok.end - (consumed / i32(65536)));
 
-      (pos : i32) = eff_start;
+      (mut(pos) : i32) = eff_start;
       while(pos < eff_end, {
         (ch : u8) = (src.add(usize(pos))).*;
 
@@ -135,13 +135,13 @@ _process_smartquotes :: (
           (is_single : bool) = (ch == u8(0x27));
 
           // -- Find lastChar (previous visible character, default = space) --
-          (last_char : i32) = i32(0x20);
+          (mut(last_char) : i32) = i32(0x20);
           if((pos > eff_start), {
             last_char = i32((src.add(usize((pos - i32(1))))).*);
           }, {
             // Look backward through previous tokens
-            (bj : i32) = (tok_i - i32(1));
-            (back_done : bool) = false;
+            (mut(bj) : i32) = (tok_i - i32(1));
+            (mut(back_done) : bool) = false;
             while(((bj >= i32(0)) && !(back_done)), {
               (prev : InlineToken) = tokens.*(usize(bj));
               (pt : i32) = i32(prev.type_name);
@@ -173,13 +173,13 @@ _process_smartquotes :: (
           });
 
           // -- Find nextChar (next visible character, default = space) --
-          (next_char : i32) = i32(0x20);
+          (mut(next_char) : i32) = i32(0x20);
           if(((pos + i32(1)) < eff_end), {
             next_char = i32((src.add(usize((pos + i32(1))))).*);
           }, {
             // Look forward through next tokens
-            (fj : i32) = (tok_i + i32(1));
-            (fwd_done : bool) = false;
+            (mut(fj) : i32) = (tok_i + i32(1));
+            (mut(fwd_done) : bool) = false;
             while(((fj < tok_count) && !(fwd_done)), {
               (nxt : InlineToken) = tokens.*(usize(fj));
               (nt : i32) = i32(nxt.type_name);
@@ -217,8 +217,8 @@ _process_smartquotes :: (
           (is_last_ws : bool) = is_white_space(last_char);
           (is_next_ws : bool) = is_white_space(next_char);
 
-          (can_open : bool) = true;
-          (can_close : bool) = true;
+          (mut(can_open) : bool) = true;
+          (mut(can_close) : bool) = true;
 
           if(is_next_ws, {
             can_open = false;
@@ -261,9 +261,9 @@ _process_smartquotes :: (
             });
           }, {
             // Try to match as closer
-            (matched : bool) = false;
+            (mut(matched) : bool) = false;
             if(can_close, {
-              (sj : i32) = (i32(stack.len()) - i32(1));
+              (mut(sj) : i32) = (i32(stack.len()) - i32(1));
               while(((sj >= i32(0)) && !(matched)), {
                 (entry : _SQEntry) = stack(usize(sj));
                 if((entry.level < this_level), {
@@ -326,13 +326,13 @@ _emit_text_with_sq :: (
     replaces : *(ArrayList(_SQReplace))
   ) -> unit
 )({
-  (cur : i32) = start;
+  (mut(cur) : i32) = start;
   while(cur < end, {
     // Find the next replacement in [cur, end) with smallest byte_pos
-    (next_pos : i32) = (i32(0) - i32(1));
-    (next_kind : u8) = u8(0);
+    (mut(next_pos) : i32) = (i32(0) - i32(1));
+    (mut(next_kind) : u8) = u8(0);
     (repl_count : i32) = i32(replaces.*.len());
-    (ri : i32) = i32(0);
+    (mut(ri) : i32) = i32(0);
     while(ri < repl_count, {
       (r : _SQReplace) = replaces.*(usize(ri));
       if(((r.byte_pos >= cur) && (r.byte_pos < end)), {
@@ -378,12 +378,12 @@ _slice_to_string :: (fn(src : *(u8), start : i32, end : i32) -> String)({
 // with same marker), and uses the run boundary to prevent same-run matching.
 _resolve_pairs :: (fn(state : *(InlineState), pairs : *(ArrayList(EmphasisPair))) -> unit)({
   (max_delim : i32) = i32(state.*.delimiters.len());
-  (header_idx : i32) = i32(0);
-  (last_token_idx : i32) = (i32(0) - i32(2));
-  (closer_idx : i32) = i32(0);
+  (mut(header_idx) : i32) = i32(0);
+  (mut(last_token_idx) : i32) = (i32(0) - i32(2));
+  (mut(closer_idx) : i32) = i32(0);
 
   while(closer_idx < max_delim, {
-    (closer : Delimiter) = state.*.delimiters(usize(closer_idx));
+    (mut(closer) : Delimiter) = state.*.delimiters(usize(closer_idx));
 
     // Track delimiter runs: consecutive tokens with same marker
     if(((closer_idx == i32(0)) || ((i32(state.*.delimiters(usize(header_idx)).marker) != i32(closer.marker)) || (last_token_idx != (closer.token_idx - i32(1))))), {
@@ -398,18 +398,18 @@ _resolve_pairs :: (fn(state : *(InlineState), pairs : *(ArrayList(EmphasisPair))
 
       if(((is_em_marker || is_strike) || is_mark), {
         // Keep consuming from this closer until depleted or no opener found
-        (keep_matching : bool) = (closer.length > i32(0));
+        (mut(keep_matching) : bool) = (closer.length > i32(0));
         while(keep_matching, {
           // Start search BEFORE the current run to prevent same-run matching
-          (opener_idx : i32) = (header_idx - i32(1));
-          (found : bool) = false;
+          (mut(opener_idx) : i32) = (header_idx - i32(1));
+          (mut(found) : bool) = false;
 
           while((opener_idx >= i32(0)) && !(found), {
             (opener : Delimiter) = state.*.delimiters(usize(opener_idx));
 
             if(((opener.marker == closer.marker) && (opener.open && (opener.length > i32(0)))), {
               // Multiple of 3 rule (emphasis only)
-              (skip : bool) = false;
+              (mut(skip) : bool) = false;
               if(is_em_marker, {
                 if(((closer.open || opener.close) && (((opener.length + closer.length) % i32(3)) == i32(0))), {
                   if((((opener.length % i32(3)) != i32(0)) || ((closer.length % i32(3)) != i32(0))), {
@@ -484,7 +484,7 @@ _resolve_pairs :: (fn(state : *(InlineState), pairs : *(ArrayList(EmphasisPair))
             closer = state.*.delimiters(usize(closer_idx));
 
             // Clear delimiters between opener and closer
-            (mid : i32) = (opener_idx + i32(1));
+            (mut(mid) : i32) = (opener_idx + i32(1));
             while(mid < closer_idx, {
               (d : Delimiter) = state.*.delimiters(usize(mid));
               addr_of(state.*.delimiters(usize(mid))).* = Delimiter(
@@ -638,7 +638,7 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
 
   // Merge emphasis pairs that were resolved inside link scopes
   (rp_count : i32) = i32(state.*.resolved_pairs.len());
-  (rp_idx : i32) = i32(0);
+  (mut(rp_idx) : i32) = i32(0);
   while(rp_idx < rp_count, {
     (ep : EmphasisPair) = state.*.resolved_pairs(usize(rp_idx));
     _ := state.*._render_pairs.push(
@@ -661,16 +661,16 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
   // When a tilde run has odd length, the odd "~" text token precedes the
   // delimiter tokens. If a delimiter becomes a closer, the "~" must appear
   // AFTER the closing tag, not before it. Swap them (matching markdown-it).
-  (si : i32) = i32(0);
+  (mut(si) : i32) = i32(0);
   while(si < tok_count, {
     (tok_s : InlineToken) = state.*.tokens(usize(si));
     if(((i32(tok_s.type_name) == i32(InlineType.Text)) && (((tok_s.end - tok_s.start) == i32(1)) && ((state.*.src_ptr.add(usize(tok_s.start))).* == u8(0x7E)))), {
       // Look ahead for consecutive strikethrough closer tokens
-      (sj : i32) = (si + i32(1));
-      (scanning : bool) = true;
+      (mut(sj) : i32) = (si + i32(1));
+      (mut(scanning) : bool) = true;
       while((sj < tok_count) && scanning, {
-        (is_strike_closer : bool) = false;
-        (pi2 : i32) = i32(0);
+        (mut(is_strike_closer) : bool) = false;
+        (mut(pi2) : i32) = i32(0);
         while(pi2 < pair_count, {
           (p2 : EmphasisPair) = pairs.*(usize(pi2));
           if(((p2.closer_tok == sj) && (p2.pair_type == i32(3))), {
@@ -691,11 +691,11 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
         addr_of(state.*.tokens(usize(si))).* = state.*.tokens(usize(sj_last));
         addr_of(state.*.tokens(usize(sj_last))).* = tmp_tok;
         // Update pair references for swapped positions
-        (ui : i32) = i32(0);
+        (mut(ui) : i32) = i32(0);
         while(ui < pair_count, {
           (pp : EmphasisPair) = pairs.*(usize(ui));
-          (new_opener : i32) = pp.opener_tok;
-          (new_closer : i32) = pp.closer_tok;
+          (mut(new_opener) : i32) = pp.opener_tok;
+          (mut(new_closer) : i32) = pp.closer_tok;
           if((pp.opener_tok == si), {
             new_opener = sj_last;
           }, if((pp.opener_tok == sj_last), {
@@ -722,7 +722,7 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
   });
 
   // Phase 1b: Smartquotes post-processing (when typographer is enabled)
-  (has_sq : bool) = false;
+  (mut(has_sq) : bool) = false;
   // sq_replaces is only used when typographer is enabled — avoid allocation otherwise
   if(renderer.*.options.*.typographer, {
     (sq_replaces : ArrayList(_SQReplace)) = ArrayList(_SQReplace).new();
@@ -736,9 +736,9 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
     renderer.*.src_len = state.*.pos_max;
 
     // Slow path: handle pairs and smartquotes
-    (tok_idx : i32) = i32(0);
+    (mut(tok_idx) : i32) = i32(0);
     while(tok_idx < tok_count, {
-      (ci : i32) = i32(0);
+      (mut(ci) : i32) = i32(0);
       while(ci < pair_count, {
         (p : EmphasisPair) = pairs.*(usize(ci));
         if((p.closer_tok == tok_idx), {
@@ -748,11 +748,11 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
       });
 
       (tok : InlineToken) = state.*.tokens(usize(tok_idx));
-      (is_delimiter_text : bool) = false;
-      (opener_consumed : i32) = i32(0);
-      (closer_consumed : i32) = i32(0);
+      (mut(is_delimiter_text) : bool) = false;
+      (mut(opener_consumed) : i32) = i32(0);
+      (mut(closer_consumed) : i32) = i32(0);
 
-      (pi : i32) = i32(0);
+      (mut(pi) : i32) = i32(0);
       while(pi < pair_count, {
         (p : EmphasisPair) = pairs.*(usize(pi));
         if((p.opener_tok == tok_idx), {
@@ -786,7 +786,7 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
         });
       });
 
-      (oi : i32) = (pair_count - i32(1));
+      (mut(oi) : i32) = (pair_count - i32(1));
       while(oi >= i32(0), {
         (p : EmphasisPair) = pairs.*(usize(oi));
         if((p.opener_tok == tok_idx), {
@@ -810,7 +810,7 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
 
     // Fast path: no pairs — just emit tokens directly with unchecked access
     if((pair_count == i32(0)), {
-      (tok_idx : i32) = i32(0);
+      (mut(tok_idx) : i32) = i32(0);
       (tok_base : *(InlineToken)) = state.*.tokens.ptr().unwrap();
       while(tok_idx < tok_count, {
         (tok : InlineToken) = (tok_base.add(usize(tok_idx))).*;
@@ -819,9 +819,9 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
       });
     }, {
       // Slow path: handle pairs (no smartquotes)
-      (tok_idx : i32) = i32(0);
+      (mut(tok_idx) : i32) = i32(0);
       while(tok_idx < tok_count, {
-        (ci : i32) = i32(0);
+        (mut(ci) : i32) = i32(0);
         while(ci < pair_count, {
           (p : EmphasisPair) = pairs.*(usize(ci));
           if((p.closer_tok == tok_idx), {
@@ -831,11 +831,11 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
         });
 
         (tok : InlineToken) = state.*.tokens(usize(tok_idx));
-        (is_delimiter_text : bool) = false;
-        (opener_consumed : i32) = i32(0);
-        (closer_consumed : i32) = i32(0);
+        (mut(is_delimiter_text) : bool) = false;
+        (mut(opener_consumed) : i32) = i32(0);
+        (mut(closer_consumed) : i32) = i32(0);
 
-        (pi : i32) = i32(0);
+        (mut(pi) : i32) = i32(0);
         while(pi < pair_count, {
           (p : EmphasisPair) = pairs.*(usize(pi));
           if((p.opener_tok == tok_idx), {
@@ -859,7 +859,7 @@ inline_render :: (fn(state : *(InlineState)) -> unit)({
           _emit_inline_token(renderer, (addr_of(tok)), state.*.src_ptr, state);
         });
 
-        (oi : i32) = (pair_count - i32(1));
+        (mut(oi) : i32) = (pair_count - i32(1));
         while(oi >= i32(0), {
           (p : EmphasisPair) = pairs.*(usize(oi));
           if((p.opener_tok == tok_idx), {

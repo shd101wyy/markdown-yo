@@ -17,8 +17,8 @@ normalize :: (fn(src : &String) -> String)({
   });
 
   // Quick scan: check if normalization is needed (reads the String in place)
-  (needs_normalize : bool) = false;
-  (si : usize) = usize(0);
+  (mut(needs_normalize) : bool) = false;
+  (mut(si) : usize) = usize(0);
   while((si < len) && !needs_normalize, {
     (b : u8) = src.byte_at(si);
     if((b == u8(0x0D)) || (b == u8(0x00)), {
@@ -36,8 +36,8 @@ normalize :: (fn(src : &String) -> String)({
 
   // Single-pass replacement
   (out : ArrayList(u8)) = ArrayList(u8).with_capacity(len);
-  (i : usize) = usize(0);
-  (run_start : usize) = usize(0);
+  (mut(i) : usize) = usize(0);
+  (mut(run_start) : usize) = usize(0);
 
   match(
     bytes.ptr(),

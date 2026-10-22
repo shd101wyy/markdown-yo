@@ -42,15 +42,15 @@ block_blockquote :: (fn(state : *BlockState, start_line : i32, end_line : i32, s
   });
 
   // Find all lines belonging to this blockquote
-  (next_line : i32) = start_line;
-  (last_line_empty : bool) = false;
+  (mut(next_line) : i32) = start_line;
+  (mut(last_line_empty) : bool) = false;
 
-  (scanning : bool) = true;
+  (mut(scanning) : bool) = true;
   while((next_line < end_line) && scanning, {
     (nbm : i32) = state.bm(next_line);
     (nts : i32) = state.ts(next_line);
     (nem : i32) = state.em(next_line);
-    (npos : i32) = (nbm + nts);
+    (mut(npos) : i32) = (nbm + nts);
     (nsc : i32) = state.sc(next_line);
 
     (is_outdented : bool) = (nsc < state.*.blk_indent);
@@ -65,9 +65,9 @@ block_blockquote :: (fn(state : *BlockState, start_line : i32, end_line : i32, s
 
         // set offset past spaces and ">"
         npos = (npos + i32(1));
-        (initial : i32) = (nsc + i32(1));
-        (space_after_marker : bool) = false;
-        (adjust_tab : bool) = false;
+        (mut(initial) : i32) = (nsc + i32(1));
+        (mut(space_after_marker) : bool) = false;
+        (mut(adjust_tab) : bool) = false;
 
         // skip one optional space after '>'
         if(npos < nem, {
@@ -89,13 +89,13 @@ block_blockquote :: (fn(state : *BlockState, start_line : i32, end_line : i32, s
           });
         });
 
-        (offset : i32) = initial;
+        (mut(offset) : i32) = initial;
 
         // Update bMarks — point to content after "> "
         state.set_bm(next_line, npos);
 
         // Scan remaining whitespace to calculate sCount
-        (ws_scanning : bool) = true;
+        (mut(ws_scanning) : bool) = true;
         while((npos < nem) && ws_scanning, {
           (wch : i32) = i32((state.*.src_ptr.add(usize(npos))).*);
           if(is_space(wch), {
@@ -128,7 +128,7 @@ block_blockquote :: (fn(state : *BlockState, start_line : i32, end_line : i32, s
           scanning = false;
         }, {
           // Lazy continuation: check terminators (inline to avoid circular import)
-          (terminated : bool) = false;
+          (mut(terminated) : bool) = false;
           if(!terminated, {
             if(block_fence(state, next_line, end_line, true), {
               terminated = true;
@@ -204,10 +204,10 @@ blockquote_find_end :: (fn(state : *BlockState, start_line : i32, end_line : i32
     return(i32(0) - i32(1));
   });
 
-  (next_line : i32) = start_line;
-  (last_line_empty : bool) = false;
+  (mut(next_line) : i32) = start_line;
+  (mut(last_line_empty) : bool) = false;
 
-  (scanning : bool) = true;
+  (mut(scanning) : bool) = true;
   while((next_line < end_line) && scanning, {
     (nbm : i32) = state.bm(next_line);
     (nts : i32) = state.ts(next_line);
@@ -227,7 +227,7 @@ blockquote_find_end :: (fn(state : *BlockState, start_line : i32, end_line : i32
         if(last_line_empty, {
           scanning = false;
         }, {
-          (terminated : bool) = false;
+          (mut(terminated) : bool) = false;
           if(!terminated, {
             if(block_fence(state, next_line, end_line, true), {
               terminated = true;

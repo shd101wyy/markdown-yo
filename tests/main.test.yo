@@ -10,8 +10,8 @@ test("it works", {
 // the buffer, but `"` escapes to 6 bytes: 5000 quotes wrote past capacity
 // (issues/escape-dense-text-overflows-the-output-buffer.md).
 test("escape-dense text grows the output instead of overflowing it", {
-  (src : String) = String.new();
-  (i : usize) = usize(0);
+  (mut(src) : String) = String.new();
+  (mut(i) : usize) = usize(0);
   while(i < usize(5000), {
     src.push_str("\"");
     i = (i + usize(1));

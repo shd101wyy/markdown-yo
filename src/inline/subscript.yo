@@ -36,9 +36,9 @@ inline_subscript :: (fn(state : *InlineState) -> bool)({
   // Scan forward for closing ~.
   // \X skips next char (any char, including space/newline).
   // Unescaped space or newline → reject.
-  (p : i32) = content_start;
-  (found : bool) = false;
-  (has_escapes : bool) = false;
+  (mut(p) : i32) = content_start;
+  (mut(found) : bool) = false;
+  (mut(has_escapes) : bool) = false;
   while((p < max) && !found, {
     (c : u8) = (state.*.src_ptr.add(usize(p))).*;
     cond(
@@ -77,7 +77,7 @@ inline_subscript :: (fn(state : *InlineState) -> bool)({
   // Emit content — unescape \X → X for any character X
   if(has_escapes, {
     (buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(p - content_start));
-    (ci : i32) = content_start;
+    (mut(ci) : i32) = content_start;
     while(ci < p, {
       (cc : u8) = (state.*.src_ptr.add(usize(ci))).*;
       if((i32(cc) == i32(0x5C)) && ((ci + i32(1)) < p), {

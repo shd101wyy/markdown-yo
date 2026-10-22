@@ -20,8 +20,8 @@ inline_strikethrough :: (fn(state : *InlineState) -> bool)({
   });
 
   // Count consecutive tildes
-  (count : i32) = i32(0);
-  (p : i32) = pos;
+  (mut(count) : i32) = i32(0);
+  (mut(p) : i32) = pos;
   while((p < state.*.pos_max) && (i32((state.*.src_ptr.add(usize(p))).*) == i32(0x7E)), {
     count = (count + i32(1));
     p = (p + i32(1));
@@ -47,7 +47,7 @@ inline_strikethrough :: (fn(state : *InlineState) -> bool)({
   (is_next_punct : bool) = is_punct_char(char_after);
 
   // Left-flanking delimiter run
-  (can_open : bool) = !is_next_ws;
+  (mut(can_open) : bool) = !is_next_ws;
   if(is_next_punct, {
     if(!is_last_ws && !is_last_punct, {
       can_open = false;
@@ -55,7 +55,7 @@ inline_strikethrough :: (fn(state : *InlineState) -> bool)({
   });
 
   // Right-flanking delimiter run
-  (can_close : bool) = !is_last_ws;
+  (mut(can_close) : bool) = !is_last_ws;
   if(is_last_punct, {
     if(!is_next_ws && !is_next_punct, {
       can_close = false;
@@ -69,14 +69,14 @@ inline_strikethrough :: (fn(state : *InlineState) -> bool)({
   state.*.push_pending();
 
   // If odd count, emit one tilde as plain text
-  (usable : i32) = count;
+  (mut(usable) : i32) = count;
   if((count % i32(2)) != i32(0), {
     _ := state.*.tokens.push(InlineToken.text(pos, pos + i32(1), state.*.level));
     usable = (count - i32(1));
   });
 
   // Emit pairs of tildes, each as a delimiter
-  (di : i32) = i32(0);
+  (mut(di) : i32) = i32(0);
   while(di < usable, {
     (dpos : i32) = (pos + (count - usable) + di);
     _ := state.*.tokens.push(InlineToken.text(dpos, dpos + i32(2), state.*.level));

@@ -215,8 +215,8 @@ escape_html_buf :: (fn(out : *ArrayList(u8), src_ptr : *u8, start : i32, end : i
   (cur_len : usize) = out.*.len();
   out.*.ensure_total_capacity(needed + cur_len);
   (esc_table : *u8) = _get_html_esc_table();
-  (i : i32) = start;
-  (run_start : i32) = start;
+  (mut(i) : i32) = start;
+  (mut(run_start) : i32) = start;
 
   while(i < end, {
     // 8-byte batch scan for safe runs: skip 8 bytes at a time when no escapes needed
@@ -300,7 +300,7 @@ string_bytes :: (fn(s : &String) -> ArrayList(u8))({
 append_string :: (fn(out : *ArrayList(u8), s : &String) -> unit)({
   (n : usize) = s.len();
   out.*.ensure_total_capacity(out.*.len() + n);
-  (i : usize) = usize(0);
+  (mut(i) : usize) = usize(0);
   while(i < n, {
     _ := out.*.push(s.byte_at(i));
     i = (i + usize(1));
@@ -316,7 +316,7 @@ escape_html_string :: (fn(out : *ArrayList(u8), s : &String) -> unit)({
   (needed : usize) = (n + (n / usize(8)) + usize(64));
   out.*.ensure_total_capacity(needed + out.*.len());
   (esc_table : *u8) = _get_html_esc_table();
-  (i : usize) = usize(0);
+  (mut(i) : usize) = usize(0);
   while(i < n, {
     (ch : u8) = s.byte_at(i);
     (esc_idx : u8) = (esc_table.add(usize(ch))).*;

@@ -56,7 +56,7 @@ wasm_render :: (fn(input_ptr : *u8, input_len : i32, flags : i32) -> *u8)({
   input := String.from_bytes(buf);
 
   // Parse option flags
-  (opts : Options) = cond(
+  (mut(opts) : Options) = cond(
     ((flags & i32(1)) != i32(0)) => commonmark_options(),
     true => default_options()
   );

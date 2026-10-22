@@ -36,9 +36,9 @@ import("std/string");
 // Main block tokenize function.
 // Parses lines [start_line, end_line) and calls renderer directly.
 block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> unit)({
-  (line : i32) = start_line;
+  (mut(line) : i32) = start_line;
   (max_nesting : i32) = state.*.options.*.max_nesting;
-  (has_empty_lines : bool) = false;
+  (mut(has_empty_lines) : bool) = false;
 
   // Use BlockState's reusable blockquote save buffers (avoids per-call allocation)
   (bq_save_bm : *ArrayList(i32)) = addr_of(state.*._bq_save_bm);
@@ -46,7 +46,7 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
   (bq_save_sc : *ArrayList(i32)) = addr_of(state.*._bq_save_sc);
   (bq_save_bs : *ArrayList(i32)) = addr_of(state.*._bq_save_bs);
 
-  (tokenize_done : bool) = false;
+  (mut(tokenize_done) : bool) = false;
   while(!tokenize_done, {
     // Skip empty lines
     while((line < end_line) && state.*.is_empty(line), {
@@ -75,7 +75,7 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
 
     if(!tokenize_done, {
       // Try each block rule in order
-      (matched : bool) = false;
+      (mut(matched) : bool) = false;
 
       // 1. Table (GFM)
       if(!matched && state.*.options.*.enable_table, {
@@ -117,8 +117,8 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
             state.*.blk_indent = (state.*.blk_indent + i32(4));
 
             // Find end: first non-empty line with sCount < blkIndent
-            (adm_next : i32) = (line + i32(1));
-            (adm_found_end : bool) = false;
+            (mut(adm_next) : i32) = (line + i32(1));
+            (mut(adm_found_end) : bool) = false;
             while((adm_next < end_line) && !adm_found_end, {
               if(state.*.is_empty(adm_next), {
                 adm_next = (adm_next + i32(1));
@@ -183,13 +183,13 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
           (old_blk_indent : i32) = state.*.blk_indent;
 
           // Check for callout pattern [!type]+/- title on first content line
-          (is_callout : bool) = false;
+          (mut(is_callout) : bool) = false;
           (co_type_start : i32) = i32(0);
           (co_type_end : i32) = i32(0);
           (co_title_start : i32) = i32(0);
           (co_title_end : i32) = i32(0);
           (co_foldable : i32) = i32(0);
-          (co_content_start : i32) = line;
+          (mut(co_content_start) : i32) = line;
           if(state.*.options.*.enable_callout && (line < bq_end), {
             if(check_callout_marker(
               state,
@@ -287,12 +287,12 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
       if(!matched, {
         if(block_list(state, line, end_line, false), {
           // ── Begin inline list handling ──
-          (list_next : i32) = line;
+          (mut(list_next) : i32) = line;
 
           // Detect list type
-          (list_is_ordered : bool) = false;
-          (list_marker_value : i32) = i32(0);
-          (list_pam : i32) = skip_ordered_list_marker(state, list_next);
+          (mut(list_is_ordered) : bool) = false;
+          (mut(list_marker_value) : i32) = i32(0);
+          (mut(list_pam) : i32) = skip_ordered_list_marker(state, list_next);
 
           if(list_pam >= i32(0), {
             list_is_ordered = true;
@@ -317,22 +317,22 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
           // so mark_tight_paragraphs scans only list item contents (depth 0 = direct children)
           (list_buf_start : usize) = state.*.renderer.*.buf_pos();
 
-          (list_tight : bool) = true;
-          (list_prev_empty_end : bool) = false;
+          (mut(list_tight) : bool) = true;
+          (mut(list_prev_empty_end) : bool) = false;
 
           (list_old_parent : ParentType) = state.*.parent_type;
           state.*.parent_type = .List;
 
-          (list_done : bool) = false;
+          (mut(list_done) : bool) = false;
           while((list_next < end_line) && !list_done, {
-            (item_pos : i32) = list_pam;
+            (mut(item_pos) : i32) = list_pam;
             (item_max : i32) = state.em(list_next);
 
             (item_initial : i32) = ((state.sc(list_next) + list_pam) - (state.bm(list_next) + state.ts(list_next)));
-            (item_offset : i32) = item_initial;
+            (mut(item_offset) : i32) = item_initial;
 
             // Calculate indent after marker (skip spaces/tabs)
-            (item_indent_scanning : bool) = true;
+            (mut(item_indent_scanning) : bool) = true;
             while((item_pos < item_max) && item_indent_scanning, {
               (ch : i32) = i32((state.*.src_ptr.add(usize(item_pos))).*);
               if(ch == i32(0x09), {
@@ -349,7 +349,7 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
             });
 
             (item_content_start : i32) = item_pos;
-            (item_indent_after_marker : i32) = cond(
+            (mut(item_indent_after_marker) : i32) = cond(
               (item_content_start >= item_max) => i32(1),
               true => (item_offset - item_initial)
             );
@@ -520,19 +520,19 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
       // 11. Definition list — inline handling with recursive tokenize
       if(!matched && state.*.options.*.enable_deflist, {
         // Start detection: current line is a potential term, next line has `:` marker
-        (dl_next_line : i32) = (line + i32(1));
+        (mut(dl_next_line) : i32) = (line + i32(1));
         if(dl_next_line < end_line, {
           if(state.*.is_empty(dl_next_line), {
             dl_next_line = (dl_next_line + i32(1));
           });
           if(dl_next_line < end_line, {
             if(state.sc(dl_next_line) >= state.*.blk_indent, {
-              (dl_content_start : i32) = skip_deflist_marker(state, dl_next_line);
+              (mut(dl_content_start) : i32) = skip_deflist_marker(state, dl_next_line);
               if(dl_content_start >= i32(0), {
                 // ── Begin inline deflist handling ──
-                (dl_tight : bool) = true;
-                (dl_dt_line : i32) = line;
-                (dl_dd_line : i32) = dl_next_line;
+                (mut(dl_tight) : bool) = true;
+                (mut(dl_dt_line) : i32) = line;
+                (mut(dl_dd_line) : i32) = dl_next_line;
 
                 // Open <dl>
                 state.*.renderer.*.set_source_line(line);
@@ -542,9 +542,9 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
                 (dl_old_parent : ParentType) = state.*.parent_type;
                 state.*.parent_type = .DefList;
 
-                (dl_done : bool) = false;
+                (mut(dl_done) : bool) = false;
                 while(!dl_done, {
-                  (dl_prev_empty_end : bool) = false;
+                  (mut(dl_prev_empty_end) : bool) = false;
 
                   // Emit <dt> with inline content of the term line
                   state.*.renderer.*.set_source_line(dl_dt_line);
@@ -553,7 +553,7 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
                   (dt_ts : i32) = state.ts(dl_dt_line);
                   (dt_em : i32) = state.em(dl_dt_line);
                   (dt_content_start : i32) = (dt_bm + dt_ts);
-                  (dt_content_end : i32) = dt_em;
+                  (mut(dt_content_end) : i32) = dt_em;
                   // Trim trailing spaces
                   while((dt_content_end > dt_content_start) && ((state.*.src_ptr.add(usize(dt_content_end - i32(1)))).* == u8(0x20)), {
                     dt_content_end = (dt_content_end - i32(1));
@@ -562,18 +562,18 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
                   state.*.renderer.*.dt_close();
 
                   // Inner loop: consume all <dd> definitions for this term
-                  (dd_done : bool) = false;
+                  (mut(dd_done) : bool) = false;
                   while(!dd_done, {
                     state.*.renderer.*.set_source_line(dl_dd_line);
                     state.*.renderer.*.dd_open();
 
                     // Calculate content offset — skip spaces after marker pos
-                    (dd_pos : i32) = dl_content_start;
+                    (mut(dd_pos) : i32) = dl_content_start;
                     (dd_max : i32) = state.em(dl_dd_line);
-                    (dd_offset : i32) =
+                    (mut(dd_offset) : i32) =
                       ((state.sc(dl_dd_line) + dl_content_start) - (state.bm(dl_dd_line) + state.ts(dl_dd_line)));
 
-                    (dd_scanning : bool) = true;
+                    (mut(dd_scanning) : bool) = true;
                     while((dd_pos < dd_max) && dd_scanning, {
                       (dd_ch : i32) = i32((state.*.src_ptr.add(usize(dd_pos))).*);
                       if(dd_ch == i32(0x09), {
@@ -738,10 +738,10 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
 // Pre-scan all lines for reference definitions before the main parse.
 // This ensures forward references ([foo] before [foo]: /url) work correctly.
 _prescan_references :: (fn(state : *BlockState) -> unit)({
-  (line : i32) = i32(0);
+  (mut(line) : i32) = i32(0);
   (max : i32) = state.*.line_max;
   // Track paragraph state: references cannot appear inside paragraph continuations
-  (in_paragraph : bool) = false;
+  (mut(in_paragraph) : bool) = false;
   while(line < max, {
     if(state.*.is_empty(line), {
       in_paragraph = false;
@@ -752,7 +752,7 @@ _prescan_references :: (fn(state : *BlockState) -> unit)({
       (ts : i32) = state.ts(line);
       (em : i32) = state.em(line);
       (sc : i32) = state.sc(line);
-      (fence_detected : bool) = false;
+      (mut(fence_detected) : bool) = false;
       if(sc < i32(4), {
         (line_start : i32) = (bm + ts);
         if(line_start < em, {
@@ -760,17 +760,17 @@ _prescan_references :: (fn(state : *BlockState) -> unit)({
           if((fc == u8(0x60)) || (fc == u8(0x7E)), {
             // Count consecutive fence chars
             (fence_char : u8) = fc;
-            (fence_count : i32) = i32(0);
-            (fp : i32) = line_start;
+            (mut(fence_count) : i32) = i32(0);
+            (mut(fp) : i32) = line_start;
             while((fp < em) && ((state.*.src_ptr.add(usize(fp))).* == fence_char), {
               fence_count = (fence_count + i32(1));
               fp = (fp + i32(1));
             });
             if(fence_count >= i32(3), {
               // Check no backticks in info string for backtick fences
-              (has_backtick_in_info : bool) = false;
+              (mut(has_backtick_in_info) : bool) = false;
               if(fence_char == u8(0x60), {
-                (ip : i32) = fp;
+                (mut(ip) : i32) = fp;
                 while(ip < em, {
                   if((state.*.src_ptr.add(usize(ip))).* == u8(0x60), {
                     has_backtick_in_info = true;
@@ -788,10 +788,10 @@ _prescan_references :: (fn(state : *BlockState) -> unit)({
                   (fts : i32) = state.ts(line);
                   (fem : i32) = state.em(line);
                   (fsc : i32) = state.sc(line);
-                  (fpos : i32) = (fbm + fts);
+                  (mut(fpos) : i32) = (fbm + fts);
                   if((fsc < i32(4)) && (fpos < fem) && ((state.*.src_ptr.add(usize(fpos))).* == fence_char), {
                     // Count closing fence chars
-                    (cc : i32) = i32(0);
+                    (mut(cc) : i32) = i32(0);
                     while((fpos < fem) && ((state.*.src_ptr.add(usize(fpos))).* == fence_char), {
                       cc = (cc + i32(1));
                       fpos = (fpos + i32(1));
@@ -853,7 +853,7 @@ _prescan_references :: (fn(state : *BlockState) -> unit)({
 // Pre-scan all lines for footnote definitions [^label]: content
 // Stores definitions in the renderer for later rendering at document end.
 _prescan_footnotes :: (fn(state : *BlockState) -> unit)({
-  (line : i32) = i32(0);
+  (mut(line) : i32) = i32(0);
   (max : i32) = state.*.line_max;
   while(line < max, {
     if(state.*.is_empty(line), {
@@ -874,8 +874,8 @@ _prescan_footnotes :: (fn(state : *BlockState) -> unit)({
 
           // Calculate content indent offset
           (initial : i32) = (state.sc(line) + (pos_after_colon - start));
-          (offset : i32) = initial;
-          (pos : i32) = pos_after_colon;
+          (mut(offset) : i32) = initial;
+          (mut(pos) : i32) = pos_after_colon;
           (em : i32) = state.em(line);
           while((pos < em) && (((state.*.src_ptr.add(usize(pos))).* == u8(0x20)) || ((state.*.src_ptr.add(usize(pos))).* == u8(0x09))), {
             if((state.*.src_ptr.add(usize(pos))).* == u8(0x09), {
@@ -891,8 +891,8 @@ _prescan_footnotes :: (fn(state : *BlockState) -> unit)({
           (adj_sc : i32) = (offset - initial);
 
           // Find end of footnote block: continuation lines indented by 4+ or empty
-          (fn_end : i32) = (line + i32(1));
-          (fn_scan_done : bool) = false;
+          (mut(fn_end) : i32) = (line + i32(1));
+          (mut(fn_scan_done) : bool) = false;
           while((fn_end < max) && !fn_scan_done, {
             if(state.*.is_empty(fn_end), {
               fn_end = (fn_end + i32(1));
@@ -942,7 +942,7 @@ _render_footnote_section :: (fn(state : *BlockState) -> unit)({
 
   r.*.fn_in_section = true;
 
-  (fn_idx : usize) = usize(0);
+  (mut(fn_idx) : usize) = usize(0);
   (fn_total : usize) = r.*.fn_ref_order.len();
   while(fn_idx < fn_total, {
     (fn_num : i32) = (i32(fn_idx) + i32(1)); // 1-based
@@ -1015,7 +1015,7 @@ _render_footnote_section :: (fn(state : *BlockState) -> unit)({
       true => i32(1) // inline footnotes have exactly 1 reference
     );
     (backref_buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(64));
-    (sub : i32) = i32(0);
+    (mut(sub) : i32) = i32(0);
     while(sub < backref_count, {
       append_lit(addr_of(backref_buf), " <a href=\"#fnref");
       _write_i32(addr_of(backref_buf), fn_num);
@@ -1039,9 +1039,9 @@ _render_footnote_section :: (fn(state : *BlockState) -> unit)({
     (backref_len : usize) = backref_buf.len();
     if(backref_len > usize(0), {
       // Scan backwards for "</p>\n"  (4 bytes: 3C 2F 70 3E 0A)
-      (scan : usize) = content_buf_end;
-      (found_p_close : bool) = false;
-      (insert_pos : usize) = usize(0);
+      (mut(scan) : usize) = content_buf_end;
+      (mut(found_p_close) : bool) = false;
+      (mut(insert_pos) : usize) = usize(0);
       while((scan > content_buf_start) && !found_p_close, {
         scan = (scan - usize(1));
         // Check if buf[scan..scan+5] == "</p>\n"
@@ -1060,7 +1060,7 @@ _render_footnote_section :: (fn(state : *BlockState) -> unit)({
         // Grow buffer by backref_len bytes
         (tail_len : usize) = (content_buf_end - insert_pos);
         // Reserve space
-        (ri : usize) = usize(0);
+        (mut(ri) : usize) = usize(0);
         while(ri < backref_len, {
           _ := r.*.buf.push(u8(0));
           ri = (ri + usize(1));

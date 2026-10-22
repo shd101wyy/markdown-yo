@@ -24,8 +24,8 @@ inline_wikilink :: (fn(state : *InlineState) -> bool)({
   if(i32((src.add(usize(pos + i32(1)))).*) != i32(0x5B), return(false));
 
   // Scan for ]] tracking | position
-  (pipe_pos : i32) = (i32(0) - i32(1));
-  (scan : i32) = (pos + i32(2));
+  (mut(pipe_pos) : i32) = (i32(0) - i32(1));
+  (mut(scan) : i32) = (pos + i32(2));
 
   while(runtime(true), {
     if(scan >= max, {
@@ -60,8 +60,8 @@ inline_wikilink :: (fn(state : *InlineState) -> bool)({
 
   // Determine href and display ranges
   (href_start : i32) = content_start;
-  (href_end : i32) = content_end;
-  (display_start : i32) = content_start;
+  (mut(href_end) : i32) = content_end;
+  (mut(display_start) : i32) = content_start;
   (display_end : i32) = content_end;
 
   if(pipe_pos != (i32(0) - i32(1)), {

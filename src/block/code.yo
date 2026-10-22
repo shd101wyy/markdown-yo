@@ -14,8 +14,8 @@ block_code :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent 
     return(true);
   });
 
-  (last : i32) = start_line;
-  (next_line : i32) = start_line;
+  (mut(last) : i32) = start_line;
+  (mut(next_line) : i32) = start_line;
 
   while(next_line < end_line, {
     if(state.*.is_empty(next_line), {
@@ -39,15 +39,15 @@ block_code :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent 
   state.*.renderer.*.lit("><code>");
 
   (indent : i32) = (i32(4) + state.*.blk_indent);
-  (line : i32) = start_line;
+  (mut(line) : i32) = start_line;
   while(line <= last, {
     (bm : i32) = state.bm(line);
     (em : i32) = state.em(line);
 
     // Strip up to `indent` columns (tab-aware, tShift-aware)
     // Characters within tShift count as indent even if non-space (e.g. list markers)
-    (first : i32) = bm;
-    (col : i32) = i32(0);
+    (mut(first) : i32) = bm;
+    (mut(col) : i32) = i32(0);
     (line_tshift : i32) = state.ts(line);
     while((first < em) && (col < indent), {
       (ch : u8) = (state.*.src_ptr.add(usize(first))).*;
@@ -69,7 +69,7 @@ block_code :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent 
     // Partially consumed tab → emit extra spaces
     if(col > indent, {
       (extra : i32) = (col - indent);
-      (sp : i32) = i32(0);
+      (mut(sp) : i32) = i32(0);
       while(sp < extra, {
         state.*.renderer.*.byte(u8(0x20));
         sp = (sp + i32(1));

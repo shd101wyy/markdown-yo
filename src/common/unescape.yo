@@ -33,7 +33,7 @@ _is_valid_entity_code :: (fn(code : i32) -> bool)(
 // Emit a Unicode codepoint as UTF-8 bytes into an ArrayList(u8)
 emit_codepoint :: (fn(out : *ArrayList(u8), code : i32) -> unit)({
   // Replace invalid or zero codepoints with U+FFFD
-  (cp : i32) = code;
+  (mut(cp) : i32) = code;
   if((cp <= i32(0)) || (cp > i32(0x10FFFF)) ||
     ((cp >= i32(0xD800)) && (cp <= i32(0xDFFF))), {
     cp = i32(0xFFFD);
@@ -69,13 +69,13 @@ try_decode_entity :: (fn(src : *u8, i : i32, end : i32, out : *ArrayList(u8)) ->
   (next : u8) = (src.add(usize(i + i32(1)))).*;
   if(next == u8(0x23), {
     // Numeric entity: &#...;
-    (p : i32) = (i + i32(2));
+    (mut(p) : i32) = (i + i32(2));
     (c2 : u8) = (src.add(usize(p))).*;
     if((c2 == u8(0x78)) || (c2 == u8(0x58)), {
       // Hex: &#xHHHH;
       p = (p + i32(1));
-      (code : i32) = i32(0);
-      (digits : i32) = i32(0);
+      (mut(code) : i32) = i32(0);
+      (mut(digits) : i32) = i32(0);
       while((p < end) && (i32((src.add(usize(p))).*) != i32(0x3B)), {
         (hc : u8) = (src.add(usize(p))).*;
         if((hc >= u8(0x30)) && (hc <= u8(0x39)), {
@@ -104,8 +104,8 @@ try_decode_entity :: (fn(src : *u8, i : i32, end : i32, out : *ArrayList(u8)) ->
       return(p + i32(1));
     }, {
       // Decimal: &#DDD;
-      (code : i32) = i32(0);
-      (digits : i32) = i32(0);
+      (mut(code) : i32) = i32(0);
+      (mut(digits) : i32) = i32(0);
       while((p < end) && (i32((src.add(usize(p))).*) != i32(0x3B)), {
         (dc : u8) = (src.add(usize(p))).*;
         if((dc >= u8(0x30)) && (dc <= u8(0x39)), {
@@ -128,7 +128,7 @@ try_decode_entity :: (fn(src : *u8, i : i32, end : i32, out : *ArrayList(u8)) ->
     return(i32(0) - i32(1));
   }, {
     // Named entity: &name;
-    (p : i32) = (i + i32(1));
+    (mut(p) : i32) = (i + i32(1));
     (name_start : i32) = p;
     while((p < end) && (i32((src.add(usize(p))).*) != i32(0x3B)), {
       p = (p + i32(1));
@@ -158,7 +158,7 @@ unescaped_slice :: (fn(src : *u8, start : i32, end : i32) -> String)({
   });
   (len : i32) = (end - start);
   (result : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
-  (i : i32) = start;
+  (mut(i) : i32) = start;
   while(i < end, {
     (b : u8) = (src.add(usize(i))).*;
     if((b == u8(0x5C)) && ((i + i32(1)) < end), {
@@ -199,7 +199,7 @@ unescaped_slice_buf :: (fn(src : *u8, start : i32, end : i32, out : *ArrayList(u
   if(end <= start, {
     return();
   });
-  (i : i32) = start;
+  (mut(i) : i32) = start;
   while(i < end, {
     (b : u8) = (src.add(usize(i))).*;
     if((b == u8(0x5C)) && ((i + i32(1)) < end), {

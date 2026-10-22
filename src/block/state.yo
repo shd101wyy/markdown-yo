@@ -74,8 +74,8 @@ BlockState :: struct(
 // Normalize source: replace \r\n → \n, lone \r → \n, \0 → U+FFFD (rare path)
 _normalize_source :: (fn(src_p : *u8, len : i32) -> ArrayList(u8))({
   (out : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
-  (i : i32) = i32(0);
-  (run_start : i32) = i32(0);
+  (mut(i) : i32) = i32(0);
+  (mut(run_start) : i32) = i32(0);
 
   while(i < len, {
     (b : u8) = (src_p.add(usize(i))).*;
@@ -130,12 +130,12 @@ _build_block_state_from_normalized :: (fn(src : &ArrayList(u8), env : &Env, rend
     .None => (*u8)("")
   );
 
-  (pos : i32) = i32(0);
-  (indent : i32) = i32(0);
-  (offset : i32) = i32(0);
-  (line_start : i32) = i32(0);
-  (indent_found : bool) = false;
-  (line_has_pipe : bool) = false;
+  (mut(pos) : i32) = i32(0);
+  (mut(indent) : i32) = i32(0);
+  (mut(offset) : i32) = i32(0);
+  (mut(line_start) : i32) = i32(0);
+  (mut(indent_found) : bool) = false;
+  (mut(line_has_pipe) : bool) = false;
 
   while(pos < len, {
     (ch : u8) = (src_p.add(usize(pos))).*;
@@ -289,7 +289,7 @@ impl(
 
     // Fast check: does input need normalization? (\r or \0 present)
     // Use memchr for SIMD-accelerated scan of entire input
-    (needs_normalize : bool) = false;
+    (mut(needs_normalize) : bool) = false;
     match(
       unsafe(memchr((*void)(src_p), int(0x0D), usize(len))),
       .Some(_) => {
@@ -312,12 +312,12 @@ impl(
     });
 
     // Line scanning: precompute line markers
-    (pos : i32) = i32(0);
-    (indent : i32) = i32(0);
-    (offset : i32) = i32(0);
-    (line_start : i32) = i32(0);
-    (indent_found : bool) = false;
-    (line_has_pipe : bool) = false;
+    (mut(pos) : i32) = i32(0);
+    (mut(indent) : i32) = i32(0);
+    (mut(offset) : i32) = i32(0);
+    (mut(line_start) : i32) = i32(0);
+    (mut(indent_found) : bool) = false;
+    (mut(line_has_pipe) : bool) = false;
 
     while(pos < len, {
       (ch : u8) = (src_p.add(usize(pos))).*;
@@ -477,7 +477,7 @@ impl(
   }),
   // Skip whitespace from position `from` on line `line`, return new position
   skip_spaces : (fn(self : *Self, pos : i32) -> i32)({
-    (p : i32) = pos;
+    (mut(p) : i32) = pos;
     while(p < self.*.src_len, {
       (ch : u8) = (self.*.src_ptr.add(usize(p))).*;
       if(!is_space(i32(ch)), {
@@ -489,7 +489,7 @@ impl(
   }),
   // Skip spaces backwards from `pos` to `min`
   skip_spaces_back : (fn(self : *Self, pos : i32, min : i32) -> i32)({
-    (p : i32) = (pos - i32(1));
+    (mut(p) : i32) = (pos - i32(1));
     while(p >= min, {
       (ch : u8) = (self.*.src_ptr.add(usize(p))).*;
       if(!is_space(i32(ch)), {
@@ -501,7 +501,7 @@ impl(
   }),
   // Skip char `code` starting at `pos`
   skip_chars : (fn(self : *Self, pos : i32, code : u8) -> i32)({
-    (p : i32) = pos;
+    (mut(p) : i32) = pos;
     while(p < self.*.src_len, {
       if((self.*.src_ptr.add(usize(p))).* != code, {
         return(p);
@@ -512,7 +512,7 @@ impl(
   }),
   // Skip char backwards
   skip_chars_back : (fn(self : *Self, pos : i32, code : u8, min : i32) -> i32)({
-    (p : i32) = (pos - i32(1));
+    (mut(p) : i32) = (pos - i32(1));
     while(p >= min, {
       if((self.*.src_ptr.add(usize(p))).* != code, {
         return(p + i32(1));

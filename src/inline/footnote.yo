@@ -28,9 +28,9 @@ inline_footnote_ref :: (fn(state : *InlineState) -> bool)({
     return(false);
   }); // ^
   // Parse label: everything until ], no spaces or newlines
-  (pos : i32) = (start + i32(2));
+  (mut(pos) : i32) = (start + i32(2));
   (label_start : i32) = pos;
-  (found_close : bool) = false;
+  (mut(found_close) : bool) = false;
   while((pos < max) && !found_close, {
     (ch : u8) = (state.*.src_ptr.add(usize(pos))).*;
     if(ch == u8(0x5D), {
@@ -110,10 +110,10 @@ inline_footnote_inline :: (fn(state : *InlineState) -> bool)({
     return(false);
   }); // [
   // Find matching ], handling nested brackets
-  (pos : i32) = (start + i32(2));
+  (mut(pos) : i32) = (start + i32(2));
   (content_start : i32) = pos;
-  (nesting : i32) = i32(1);
-  (found : bool) = false;
+  (mut(nesting) : i32) = i32(1);
+  (mut(found) : bool) = false;
   while((pos < max) && !found, {
     (ch : u8) = (state.*.src_ptr.add(usize(pos))).*;
     cond(

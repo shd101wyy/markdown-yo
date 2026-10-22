@@ -9,7 +9,7 @@ pragma(Pragma.AllowUnsafe);
 
 emphasis_post :: (fn(state : *InlineState) -> unit)({
   (max_delim : i32) = i32(state.*.delimiters.len());
-  (closer_idx : i32) = i32(0);
+  (mut(closer_idx) : i32) = i32(0);
 
   while(closer_idx < max_delim, {
     (closer : Delimiter) = state.*.delimiters(usize(closer_idx));
@@ -17,8 +17,8 @@ emphasis_post :: (fn(state : *InlineState) -> unit)({
     // Only process * and _ close delimiters
     if(closer.close && ((i32(closer.marker) == i32(0x2A)) || (i32(closer.marker) == i32(0x5F))), {
       // Search backwards for matching opener
-      (opener_idx : i32) = (closer_idx - i32(1));
-      (found_opener : bool) = false;
+      (mut(opener_idx) : i32) = (closer_idx - i32(1));
+      (mut(found_opener) : bool) = false;
 
       while((opener_idx >= i32(0)) && !found_opener, {
         (opener : Delimiter) = state.*.delimiters(usize(opener_idx));
@@ -26,7 +26,7 @@ emphasis_post :: (fn(state : *InlineState) -> unit)({
         if((opener.marker == closer.marker) && opener.open, {
           // "Multiple of 3" rule: if close + open is multiple of 3, skip
           // unless both are multiples of 3
-          (skip : bool) = false;
+          (mut(skip) : bool) = false;
           if((closer.open || opener.close) && (((opener.length + closer.length) % i32(3)) == i32(0)), {
             if(((opener.length % i32(3)) != i32(0)) || ((closer.length % i32(3)) != i32(0)), {
               skip = true;
@@ -137,7 +137,7 @@ emphasis_post :: (fn(state : *InlineState) -> unit)({
         );
 
         // Remove delimiters between opener and closer
-        (mid : i32) = (opener_idx + i32(1));
+        (mut(mid) : i32) = (opener_idx + i32(1));
         while(mid < closer_idx, {
           (d : Delimiter) = state.*.delimiters(usize(mid));
           addr_of(state.*.delimiters(usize(mid))).* = Delimiter(

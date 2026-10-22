@@ -28,8 +28,8 @@ block_hr :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent : 
   });
 
   // Count markers (skip spaces between)
-  (cnt : i32) = i32(0);
-  (p : i32) = pos;
+  (mut(cnt) : i32) = i32(0);
+  (mut(p) : i32) = pos;
   while(p < em, {
     (ch : i32) = i32((state.*.src_ptr.add(usize(p))).*);
     cond(

@@ -58,8 +58,8 @@ inline_critic :: (fn(state : *InlineState) -> bool)({
   );
 
   // Scan for closing sequence
-  (scan : i32) = (pos + i32(3));
-  (sub_pos : i32) = (i32(0) - i32(1)); // position of ~> for substitution
+  (mut(scan) : i32) = (pos + i32(3));
+  (mut(sub_pos) : i32) = (i32(0) - i32(1)); // position of ~> for substitution
   while(runtime(true), {
     if((scan + i32(2)) > max, {
       return(false);
@@ -109,9 +109,9 @@ inline_critic :: (fn(state : *InlineState) -> bool)({
   // info_start/info_end = primary content (or old text for substitution)
   // title_start/title_end = new text for substitution, unused for others
   (info_s : i32) = content_start;
-  (info_e : i32) = content_end;
-  (title_s : i32) = i32(0);
-  (title_e : i32) = i32(0);
+  (mut(info_e) : i32) = content_end;
+  (mut(title_s) : i32) = i32(0);
+  (mut(title_e) : i32) = i32(0);
 
   if(marker == i32(0x7E), {
     info_e = sub_pos;

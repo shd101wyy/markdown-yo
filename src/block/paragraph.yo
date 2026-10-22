@@ -16,7 +16,7 @@ import("std/string");
 // Build inline content from multiple lines into the reusable _line_buf, return ptr+len
 _build_inline_string_buf :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> unit)({
   state.*._line_buf.clear();
-  (line : i32) = start_line;
+  (mut(line) : i32) = start_line;
   while(line < end_line, {
     (bm : i32) = state.bm(line);
     (ts : i32) = state.ts(line);
@@ -44,10 +44,10 @@ block_paragraph :: (fn(state : *BlockState, start_line : i32, end_line : i32, si
   (old_parent_type : ParentType) = state.*.parent_type;
   state.*.parent_type = .Paragraph;
 
-  (next_line : i32) = (start_line + i32(1));
+  (mut(next_line) : i32) = (start_line + i32(1));
 
   // Jump line-by-line until empty line or EOF
-  (searching : bool) = true;
+  (mut(searching) : bool) = true;
   while((next_line < end_line) && !(state.*.is_empty(next_line)) && searching, {
     // Lazy continuation for deeply indented lines
     if((state.sc(next_line) - state.*.blk_indent) > i32(3), {
@@ -83,7 +83,7 @@ block_paragraph :: (fn(state : *BlockState, start_line : i32, end_line : i32, si
     (em : i32) = state.em(start_line);
     (content_start : i32) = (bm + ts);
     // Trim trailing spaces
-    (content_end : i32) = em;
+    (mut(content_end) : i32) = em;
     while((content_end > content_start) && ((state.*.src_ptr.add(usize(content_end - i32(1)))).* == u8(0x20)), {
       content_end = (content_end - i32(1));
     });

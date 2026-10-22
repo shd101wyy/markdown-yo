@@ -11,8 +11,8 @@ inline_newline :: (fn(state : *InlineState) -> bool)({
   });
 
   // Count trailing spaces in pending text before pushing
-  (back : i32) = (pos - i32(1));
-  (space_count : i32) = i32(0);
+  (mut(back) : i32) = (pos - i32(1));
+  (mut(space_count) : i32) = i32(0);
   while((back >= state.*.pending_start) && (i32((state.*.src_ptr.add(usize(back))).*) == i32(0x20)), {
     space_count = (space_count + i32(1));
     back = (back - i32(1));

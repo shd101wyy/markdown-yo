@@ -21,7 +21,7 @@ _emit_table_row_cells :: (fn(state : *(BlockState), line : i32, aligns : *(Array
   (bm : i32) = state.bm(line);
   (ts : i32) = state.ts(line);
   (em : i32) = state.em(line);
-  (pos : i32) = (bm + ts);
+  (mut(pos) : i32) = (bm + ts);
   (col_count : i32) = i32(aligns.*.len());
   (src : *(u8)) = state.*.src_ptr;
 
@@ -32,15 +32,15 @@ _emit_table_row_cells :: (fn(state : *(BlockState), line : i32, aligns : *(Array
 
   // Build cell contents using segments (like markdown-it's escapedSplit)
   // cell_buf accumulates the cell content, stripping \ before |
-  (col : i32) = i32(0);
+  (mut(col) : i32) = i32(0);
   while(col < col_count, {
     cell_buf.*.clear();
-    (is_escaped : bool) = false;
-    (seg_start : i32) = pos;
-    (found_pipe : bool) = false;
+    (mut(is_escaped) : bool) = false;
+    (mut(seg_start) : i32) = pos;
+    (mut(found_pipe) : bool) = false;
 
-    (has_special : bool) = false;
-    (has_html_char : bool) = false;
+    (mut(has_special) : bool) = false;
+    (mut(has_html_char) : bool) = false;
     while((pos < em) && !(found_pipe), {
       (ch : i32) = i32((src.add(usize(pos))).*);
       if((ch == i32(0x7C)), {
@@ -86,8 +86,8 @@ _emit_table_row_cells :: (fn(state : *(BlockState), line : i32, aligns : *(Array
 
     // Trim leading and trailing spaces from cell_buf
     (cb_len : usize) = cell_buf.*.len();
-    (cb_start : usize) = usize(0);
-    (cb_end : usize) = cb_len;
+    (mut(cb_start) : usize) = usize(0);
+    (mut(cb_end) : usize) = cb_len;
     if((cb_len > usize(0)), {
       (cb_ptr : *(u8)) = cell_buf.*.ptr().unwrap();
       while(((cb_start < cb_end) && is_space(i32((cb_ptr.add(cb_start)).*))), {
@@ -186,17 +186,17 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
   });
 
   // Parse separator line to extract alignment
-  (sep_col_count : i32) = i32(0);
-  (valid_sep : bool) = true;
+  (mut(sep_col_count) : i32) = i32(0);
+  (mut(valid_sep) : bool) = true;
 
   // Skip leading pipe
-  (sp : i32) = sep_pos;
+  (mut(sp) : i32) = sep_pos;
   if(((sp < sep_em) && (i32((state.*.src_ptr.add(usize(sp))).*) == i32(0x7C))), {
     sp = (sp + i32(1));
   });
 
   // Parse each cell separator
-  (parsing_sep : bool) = true;
+  (mut(parsing_sep) : bool) = true;
   while(((sp < sep_em) && parsing_sep) && valid_sep, {
     // Skip spaces
     while((sp < sep_em) && is_space(i32((state.*.src_ptr.add(usize(sp))).*)), {
@@ -206,8 +206,8 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
     if((sp >= sep_em), {
       parsing_sep = false;
     }, {
-      (left_colon : bool) = false;
-      (right_colon : bool) = false;
+      (mut(left_colon) : bool) = false;
+      (mut(right_colon) : bool) = false;
 
       // Check leading :
       if((i32((state.*.src_ptr.add(usize(sp))).*) == i32(0x3A)), {
@@ -216,7 +216,7 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
       });
 
       // Count dashes
-      (dash_count : i32) = i32(0);
+      (mut(dash_count) : i32) = i32(0);
       while((sp < sep_em) && (i32((state.*.src_ptr.add(usize(sp))).*) == i32(0x2D)), {
         dash_count = (dash_count + i32(1));
         sp = (sp + i32(1));
@@ -260,10 +260,10 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
   // Count header columns — must match separator column count
   // Uses same logic as escapedSplit: only tracks \| escapes, no backticks
   (col_count : i32) = sep_col_count;
-  (header_cols : i32) = i32(0);
+  (mut(header_cols) : i32) = i32(0);
   {
-    (hp : i32) = pos;
-    (h_is_escaped : bool) = false;
+    (mut(hp) : i32) = pos;
+    (mut(h_is_escaped) : bool) = false;
     // Skip leading pipe
     if(((hp < em) && (i32((state.*.src_ptr.add(usize(hp))).*) == i32(0x7C))), {
       hp = (hp + i32(1));
@@ -282,7 +282,7 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
     header_cols = (header_cols + i32(1));
     // Check trailing pipe: walk back from end skipping spaces
     {
-      (check_pos : i32) = (em - i32(1));
+      (mut(check_pos) : i32) = (em - i32(1));
       while(((check_pos > pos) && is_space(i32((state.*.src_ptr.add(usize(check_pos))).*))), {
         check_pos = (check_pos - i32(1));
       });
@@ -304,11 +304,11 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
   // Non-silent: re-parse separator line to get alignment info
   (aligns : ArrayList(TableAlign)) = ArrayList(TableAlign).new();
   {
-    (rp : i32) = sep_pos;
+    (mut(rp) : i32) = sep_pos;
     if(((rp < sep_em) && (i32((state.*.src_ptr.add(usize(rp))).*) == i32(0x7C))), {
       rp = (rp + i32(1));
     });
-    (rp_done : bool) = false;
+    (mut(rp_done) : bool) = false;
     while(((rp < sep_em) && !(rp_done)), {
       while((rp < sep_em) && is_space(i32((state.*.src_ptr.add(usize(rp))).*)), {
         rp = (rp + i32(1));
@@ -362,9 +362,9 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
   state.*.renderer.*.close_thead();
 
   // Body rows — only emit tbody if there are body rows
-  (row_line : i32) = (start_line + i32(2));
-  (has_body : bool) = false;
-  (table_done : bool) = false;
+  (mut(row_line) : i32) = (start_line + i32(2));
+  (mut(has_body) : bool) = false;
+  (mut(table_done) : bool) = false;
 
   while((((row_line < end_line) && !(state.*.is_empty(row_line))) && (state.sc(row_line) >= state.*.blk_indent)) && !(table_done), {
     if(((state.sc(row_line) - state.*.blk_indent) >= i32(4)), {

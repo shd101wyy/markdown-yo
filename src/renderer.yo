@@ -507,6 +507,16 @@ impl(
       _source_line : (i32(0) - i32(1))
     )
   }),
+  // Point the renderer at the bytes the block state parses. BlockState calls
+  // it when it normalized the source (`\r\n`, `\r`, `\0`): every offset the
+  // parse hands the renderer then indexes the normalized buffer, not the
+  // caller's bytes `new` was given. That includes `_orig_src`, the base the
+  // abbreviation and footnote definition lookups read.
+  set_source : (fn(self : *Self, src_ptr : *u8, src_len : i32) -> unit)({
+    self.*.src_ptr = src_ptr;
+    self.*.src_len = src_len;
+    self.*._orig_src = src_ptr;
+  }),
   // Get the rendered output as a String. It consumes the renderer and
   // destructures it as a whole value, so the output buffer moves into the
   // String instead of being copied: a field read (`self.buf`) would be a

@@ -65,3 +65,36 @@ test("an abbreviation definition is consumed without reading outside its line", 
   html3 := markdown_to_html(&after_item, &opts);
   assert(html3 == String.from("<ul>\n<li>item</li>\n</ul>\n<p><abbr title=\"y\">X</abbr></p>\n"), `definition after a list item: got ${html3}`);
 });
+
+// A source holding `\r` or `\0` is normalized into a copy (`\r\n` and `\r`
+// to `\n`, `\0` to U+FFFD), but the renderer kept reading the caller's bytes
+// at the copy's offsets: an indented code block printed shifted text, CRLF
+// footnote and abbreviation definitions were looked up in the wrong bytes,
+// and each `\0` (one byte that becomes three) pushed the offsets past the end
+// of the caller's buffer, a heap over-read under ASan
+// (issues/the-renderer-reads-the-caller-bytes-at-normalized-offsets.md).
+test("a source that needs normalization renders like its normalized form", {
+  (mut(opts) : Options) = default_options();
+  opts.enable_abbr = true;
+  opts.enable_footnote = true;
+
+  (crlf_code : String) = String.from("a\r\n\r\n    code\r\n");
+  html := markdown_to_html(&crlf_code, &opts);
+  assert(html == String.from("<p>a</p>\n<pre><code>code\n</code></pre>\n"), `CRLF indented code: got ${html}`);
+
+  (crlf_footnote : String) = String.from("Text[^1].\r\n\r\n[^1]: Note.\r\n");
+  (lf_footnote : String) = String.from("Text[^1].\n\n[^1]: Note.\n");
+  html2 := markdown_to_html(&crlf_footnote, &opts);
+  html2_lf := markdown_to_html(&lf_footnote, &opts);
+  assert(html2 == html2_lf, `CRLF footnote: got ${html2}, LF renders ${html2_lf}`);
+
+  (crlf_abbr : String) = String.from("*[X]: y\r\n\r\nX\r\n");
+  html3 := markdown_to_html(&crlf_abbr, &opts);
+  assert(html3 == String.from("<p><abbr title=\"y\">X</abbr></p>\n"), `CRLF abbreviation: got ${html3}`);
+
+  (nul : String) = String.from("x\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\n\n*[X]: yyyyyyyyyyyyyyyyyyyyyyyy\n\nX T[^1].\n\n[^1]: Note.\n");
+  (replaced : String) = String.from("x\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\n\n*[X]: yyyyyyyyyyyyyyyyyyyyyyyy\n\nX T[^1].\n\n[^1]: Note.\n");
+  html4 := markdown_to_html(&nul, &opts);
+  html4_replaced := markdown_to_html(&replaced, &opts);
+  assert(html4 == html4_replaced, `NUL source: got ${html4}, U+FFFD renders ${html4_replaced}`);
+});

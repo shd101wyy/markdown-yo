@@ -485,8 +485,8 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
         (fn_le : i32) = i32(0);
         (fn_cs : i32) = i32(0);
         if(check_footnote_def(state, line, addr_of(fn_ls), addr_of(fn_le), addr_of(fn_cs)), {
-          // Find the matching def to get its line_end
-          (fn_def_idx : i32) = state.*.renderer.*.fn_find_def(fn_ls, fn_le, state.*.src_ptr);
+          // Find the def the prescan registered at this line to get its line_end
+          (fn_def_idx : i32) = state.*.renderer.*.fn_def_at_line(line);
           if(fn_def_idx >= i32(0), {
             (fn_defs_ptr : *FootnoteDef) = state.*.renderer.*.fn_defs.ptr().unwrap();
             (fn_def : *FootnoteDef) = fn_defs_ptr.add(usize(fn_def_idx));

@@ -1111,8 +1111,29 @@ impl(
     _ := self.*.fn_ref_counts.push(i32(0));
     _ := self.*.fn_defs.push(def);
   }),
+  // The footnote definition the prescan registered at `line`, or -1. The
+  // block pass skips a definition's lines through this, not through the
+  // label: two definitions can share a label, and jumping to the other one's
+  // end would move the parse backwards and never finish.
+  fn_def_at_line : (fn(self : *Self, line : i32) -> i32)({
+    (n : usize) = self.*.fn_defs.len();
+    if(n == usize(0), {
+      return(i32(0) - i32(1));
+    });
+    (defs_ptr : *FootnoteDef) = self.*.fn_defs.ptr().unwrap();
+    (mut(i) : usize) = usize(0);
+    while(i < n, {
+      if((defs_ptr.add(i)).*.line_start == line, {
+        return(i32(i));
+      });
+      i = (i + usize(1));
+    });
+    i32(0) - i32(1)
+  }),
   // Look up a footnote definition by label. Returns def index or -1.
   // label_ptr is the base pointer for the query label bytes (may differ from _orig_src for inline state).
+  // When several definitions share the label, the LAST one wins, as in
+  // markdown-it-footnote (each definition overwrites the label's content).
   fn_find_def : (fn(self : *Self, label_start : i32, label_end : i32, label_ptr : *u8) -> i32)({
     (mut(result) : i32) = (i32(0) - i32(1));
     (n : usize) = self.*.fn_defs.len();
@@ -1122,8 +1143,9 @@ impl(
     (defs_ptr : *FootnoteDef) = self.*.fn_defs.ptr().unwrap();
     (src : *u8) = self.*._orig_src;
     (label_len : i32) = (label_end - label_start);
-    (mut(i) : usize) = usize(0);
-    while((i < n) && (result == (i32(0) - i32(1))), {
+    (mut(i) : usize) = n;
+    while((i > usize(0)) && (result == (i32(0) - i32(1))), {
+      i = (i - usize(1));
       (def : *FootnoteDef) = defs_ptr.add(i);
       (def_label_len : i32) = (def.*.label_end - def.*.label_start);
       if(def_label_len == label_len, {
@@ -1145,7 +1167,6 @@ impl(
           result = i32(i);
         });
       });
-      i = (i + usize(1));
     });
     result
   }),

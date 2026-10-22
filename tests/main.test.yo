@@ -98,3 +98,23 @@ test("a source that needs normalization renders like its normalized form", {
   html4_replaced := markdown_to_html(&replaced, &opts);
   assert(html4 == html4_replaced, `NUL source: got ${html4}, U+FFFD renders ${html4_replaced}`);
 });
+
+// The block pass skipped a footnote definition's lines by looking the
+// definition up BY LABEL and jumping to its end. With two definitions of one
+// label, the second one's lookup found the first and jumped back before it,
+// so the parse never finished and the output grew without bound
+// (issues/a-repeated-footnote-label-never-finishes-parsing.md). The skip now
+// finds the definition registered at the current line, and a reference uses
+// the label's last definition, as markdown-it-footnote does.
+test("a repeated footnote label finishes and the last definition wins", {
+  (mut(opts) : Options) = default_options();
+  opts.enable_footnote = true;
+
+  (twice : String) = String.from("A[^1].\n\n[^1]: a\n\n[^1]: b\n");
+  html := markdown_to_html(&twice, &opts);
+  assert(html == String.from("<p>A<sup class=\"footnote-ref\"><a href=\"#fn1\" id=\"fnref1\">[1]</a></sup>.</p>\n<hr class=\"footnotes-sep\">\n<section class=\"footnotes\">\n<ol class=\"footnotes-list\">\n<li id=\"fn1\" class=\"footnote-item\"><p>b <a href=\"#fnref1\" class=\"footnote-backref\">↩︎</a></p>\n</li>\n</ol>\n</section>\n"), `repeated label: got ${html}`);
+
+  (in_quote : String) = String.from("A[^1].\n\n[^1]: a\n\n> [^1]: b\n");
+  html2 := markdown_to_html(&in_quote, &opts);
+  assert(html2.contains("<blockquote>"), `repeated label inside a blockquote: got ${html2}`);
+});

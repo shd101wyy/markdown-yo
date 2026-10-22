@@ -507,15 +507,14 @@ impl(
       _source_line : (i32(0) - i32(1))
     )
   }),
-  // Get the rendered output as a String. It consumes the renderer, so the
-  // output buffer moves into the String instead of being copied.
-  finish : (fn(self : Self) -> String)({
-    // Bind the buffer to a local before handing it over: `from_bytes` takes
-    // its list by `own` in newer Yo std, and Yo 0.2.49 does not retain a
-    // field passed straight to a `Type.method` `own` parameter.
-    (buf : ArrayList(u8)) = self.buf;
-    String.from_bytes(buf)
-  }),
+  // Get the rendered output as a String. It consumes the renderer and
+  // destructures it as a whole value, so the output buffer moves into the
+  // String instead of being copied: a field read (`self.buf`) would be a
+  // copy, since Yo has no partial moves (VALUES_BY_DEFAULT decision 19).
+  // `yo fix --migrate explicit-copy` lists no copy here.
+  finish : (fn(self : Self) -> String)(
+    match(self, { buf } => String.from_bytes(buf))
+  ),
   // -------------------------------------------------------------------
   // Low-level append helpers
   // -------------------------------------------------------------------

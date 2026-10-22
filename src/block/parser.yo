@@ -77,6 +77,10 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
       // Try each block rule in order
       (mut(matched) : bool) = false;
 
+      // 0. Abbreviation definition: the prescan already registered it, and the
+      // line is skipped before any other rule reads it
+      matched = block_abbr(state, line, end_line, false);
+
       // 1. Table (GFM)
       if(!matched && state.*.options.*.enable_table, {
         matched = block_table(state, line, end_line, false);
@@ -473,11 +477,6 @@ block_tokenize :: (fn(state : *BlockState, start_line : i32, end_line : i32) -> 
           matched = true;
           // ── End inline list handling ──
         });
-      });
-
-      // 7. Abbreviation definition
-      if(!matched, {
-        matched = block_abbr(state, line, end_line, false);
       });
 
       // 7b. Footnote definition — skip lines (content already stored in prescan)

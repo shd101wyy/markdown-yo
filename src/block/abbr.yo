@@ -78,16 +78,18 @@ _parse_abbr_def :: (fn(state : *BlockState, line : i32) -> bool)({
 });
 
 // Block rule: parse abbreviation definition
-// Called from block parser dispatch. Skips lines already consumed by prescan.
+// Called first in the block parser dispatch, so no other rule reads a line the
+// prescan consumed, and as a paragraph terminator (markdown-it-abbr's
+// abbr_def has alt: paragraph, reference). Skips lines consumed by prescan.
 block_abbr :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent : bool) -> bool)({
   if(!(state.*.options.*.enable_abbr), return(false));
 
-  // Check if this line was already consumed by prescan_abbr (marked with ts = -1)
-  if(state.ts(start_line) == (i32(0) - i32(1)), {
+  // Check if this line was already consumed by prescan_abbr
+  if(state.is_abbr_def(start_line), {
     if(silent, return(true));
     // Skip all consecutive consumed lines
     (mut(line) : i32) = start_line;
-    while((line < end_line) && (state.ts(line) == (i32(0) - i32(1))), {
+    while((line < end_line) && state.is_abbr_def(line), {
       line = (line + i32(1));
     });
     state.*.line = line;
@@ -113,11 +115,13 @@ prescan_abbr :: (fn(state : *BlockState) -> unit)({
       state.*.line = line;
       (matched : bool) = _parse_abbr_def(state, line);
       if(matched, {
-        // Mark consumed lines so block_tokenize skips them
+        // Mark consumed lines so block_tokenize skips them. The mark is a
+        // per-line flag, not a line-marker value: the line's offsets stay
+        // what every other rule expects to read.
         (consumed : i32) = state.*.line;
         (mut(cl) : i32) = line;
         while(cl < consumed, {
-          state.*.set_ts(cl, i32(0) - i32(1));
+          state.*.mark_abbr_def(cl);
           cl = (cl + i32(1));
         });
         line = consumed;

@@ -38,8 +38,9 @@ BlockState :: struct(
   _ts : *i32,
   _sc : *i32,
   _bs : *i32,
-  // Per-line flags (precomputed during line scan)
-  // 1 if line contains '|', else 0
+  // Per-line flags: bit 0 (precomputed during line scan) is set when the line
+  // contains '|'; bit 1 when the abbreviation prescan consumed the line as a
+  // definition (block/abbr.yo)
   _pipe_flags : ArrayList(u8),
   // cached pointer into _pipe_flags
   _pf : *u8,
@@ -457,7 +458,11 @@ impl(
   ts : (fn(self : *Self, line : i32) -> i32)((self.*._ts.add(usize(line))).*),
   sc : (fn(self : *Self, line : i32) -> i32)((self.*._sc.add(usize(line))).*),
   bs : (fn(self : *Self, line : i32) -> i32)((self.*._bs.add(usize(line))).*),
-  has_pipe : (fn(self : *Self, line : i32) -> bool)((self.*._pf.add(usize(line))).* != u8(0)),
+  has_pipe : (fn(self : *Self, line : i32) -> bool)(((self.*._pf.add(usize(line))).* & u8(1)) != u8(0)),
+  is_abbr_def : (fn(self : *Self, line : i32) -> bool)(((self.*._pf.add(usize(line))).* & u8(2)) != u8(0)),
+  mark_abbr_def : (fn(self : *Self, line : i32) -> unit)({
+    (self.*._pf.add(usize(line))).* = ((self.*._pf.add(usize(line))).* | u8(2));
+  }),
   set_bm : (fn(self : *Self, line : i32, val : i32) -> unit)({
     (self.*._bm.add(usize(line))).* = val;
   }),

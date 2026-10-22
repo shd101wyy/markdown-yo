@@ -1,6 +1,6 @@
 { assert } :: import("std/assert");
 { String } :: import("std/string");
-{ markdown_to_html, default_options } :: import("../src/lib.yo");
+{ markdown_to_html, Options, default_options } :: import("../src/lib.yo");
 
 test("it works", {
   assert((1 + 1) == 2, "math is broken");
@@ -40,4 +40,28 @@ test("punycode of a truncated percent-decoded UTF-8 domain stays in bounds", {
   (valid : String) = String.from("[l](http://a%C3%A3/)\n");
   html3 := markdown_to_html(&valid, default_options());
   assert(html3 == String.from("<p><a href=\"http://xn--a-yfa/\">l</a></p>\n"), `valid multibyte domain: got ${html3}`);
+});
+
+// The abbreviation prescan marked each definition line consumed by setting
+// its first-non-space offset to -1, and every rule that ran on the line
+// before the abbreviation rule read the byte at `bm + ts`: one byte BEFORE
+// the source buffer when the definition is the first line (a heap over-read,
+// red under ASan), and the preceding newline elsewhere, so a definition in a
+// paragraph continuation rendered as `\n*[X]: y` inside the paragraph
+// (issues/abbreviation-definition-lines-are-read-at-offset-minus-one.md).
+test("an abbreviation definition is consumed without reading outside its line", {
+  (mut(opts) : Options) = default_options();
+  opts.enable_abbr = true;
+
+  (first : String) = String.from("*[CSS]: Cascading Style Sheets\n\nThis is some CSS here.\n");
+  html := markdown_to_html(&first, &opts);
+  assert(html == String.from("<p>This is some <abbr title=\"Cascading Style Sheets\">CSS</abbr> here.</p>\n"), `definition on the first line: got ${html}`);
+
+  (in_paragraph : String) = String.from("para\n*[X]: y\nmore X\n");
+  html2 := markdown_to_html(&in_paragraph, &opts);
+  assert(html2 == String.from("<p>para</p>\n<p>more <abbr title=\"y\">X</abbr></p>\n"), `definition interrupting a paragraph: got ${html2}`);
+
+  (after_item : String) = String.from("- item\n*[X]: y\n\nX\n");
+  html3 := markdown_to_html(&after_item, &opts);
+  assert(html3 == String.from("<ul>\n<li>item</li>\n</ul>\n<p><abbr title=\"y\">X</abbr></p>\n"), `definition after a list item: got ${html3}`);
 });

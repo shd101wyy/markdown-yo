@@ -27,6 +27,17 @@
   field to a local first; `break` out of a loop rather than `return` it from
   inside one).
 
+## Bindings and Copies
+- A local is immutable unless declared `mut(name)` (Yo decision 47):
+  `(mut(i) : i32) = 0;`, `mut(buf) := ArrayList(u8).new();`. A write to an
+  unmarked local is E0917. `yo fix <path> --migrate mut-bindings` marks every
+  written binding.
+- Spell an `ArrayList`/`String` copy `.clone()` where the source is used
+  again; a last use moves (Yo values-by-default). `yo fix <path> --migrate
+  explicit-copy` inserts the clones and lists the sites it cannot decide.
+- A struct that caches `.ptr()` of a list it owns reads the pointer BEFORE
+  the list moves into it (a move keeps the buffer; a clone would not).
+
 ## Module Organization
 - One file per block/inline rule
 - State structs in `block/state.yo` and `inline/state.yo`

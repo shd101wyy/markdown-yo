@@ -842,8 +842,8 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
         match(
           maybe_ref,
           .Some(r) => {
-            ref_href = r.href;
-            ref_title = r.title;
+            ref_href = r.href.clone();
+            ref_title = r.title.clone();
             is_ref = true;
           },
           .None => ()

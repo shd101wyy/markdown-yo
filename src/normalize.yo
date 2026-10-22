@@ -1,7 +1,7 @@
 // markdown_yo — Source normalization
 //
 // Single-pass: CRLF → LF, lone CR → LF, NULL → U+FFFD.
-// Returns a new String only if changes are needed; otherwise returns the input.
+// Returns the normalized copy when changes are needed; otherwise a copy of the input.
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
 { ArrayList } :: import("std/collections/array_list");
@@ -13,7 +13,7 @@ normalize :: (fn(src : &String) -> String)({
   (len : usize) = src.len();
 
   if(len == usize(0), {
-    return(src);
+    return(src.clone());
   });
 
   // Quick scan: check if normalization is needed (reads the String in place)
@@ -28,7 +28,7 @@ normalize :: (fn(src : &String) -> String)({
   });
 
   if(!needs_normalize, {
-    return(src);
+    return(src.clone());
   });
 
   // The replacement pass reads through a raw pointer: copy the bytes once.

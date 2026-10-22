@@ -507,8 +507,9 @@ impl(
       _source_line : (i32(0) - i32(1))
     )
   }),
-  // Get the rendered output as a String (transfers ownership of buffer)
-  finish : (fn(self : &Self) -> String)({
+  // Get the rendered output as a String. It consumes the renderer, so the
+  // output buffer moves into the String instead of being copied.
+  finish : (fn(self : Self) -> String)({
     // Bind the buffer to a local before handing it over: `from_bytes` takes
     // its list by `own` in newer Yo std, and Yo 0.2.49 does not retain a
     // field passed straight to a `Type.method` `own` parameter.
@@ -1487,7 +1488,8 @@ impl(
     self.*.lit("<img src=\"");
     self.*.escaped_string(src);
     self.*.lit("\" alt=\"");
-    self.*.img_title = title;
+    // Kept until close_image, after the caller's title may have changed: a copy.
+    self.*.img_title = title.clone();
     self.*.img_nest = (self.*.img_nest + i32(1));
   }),
   // Buffer-based: src from buf, title from String
@@ -1499,7 +1501,8 @@ impl(
     self.*.lit("<img src=\"");
     self.*.escaped_raw(src_buf);
     self.*.lit("\" alt=\"");
-    self.*.img_title = title;
+    // Kept until close_image, after the caller's title may have changed: a copy.
+    self.*.img_title = title.clone();
     self.*.img_nest = (self.*.img_nest + i32(1));
   }),
   // Buffer-based: src from buf, title from raw bytes (zero-RC)
@@ -1545,10 +1548,9 @@ impl(
     if(self.*.img_nest > i32(0), {
       return();
     });
-    (title : String) = self.*.img_title;
-    if(title.len() > usize(0), {
+    if(self.*.img_title.len() > usize(0), {
       self.*.lit("\" title=\"");
-      self.*.escaped_string(&title);
+      self.*.escaped_string(&self.*.img_title);
     });
     cond(
       self.*.options.*.xhtml_out => self.*.lit("\" />"),

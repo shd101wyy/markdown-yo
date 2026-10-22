@@ -12,7 +12,10 @@ pragma(Pragma.AllowUnsafe);
 { is_space } :: import("../common/utils.yo");
 
 BlockState :: struct(
-  // normalized source bytes (owns the buffer src_ptr points into)
+  // the normalized source bytes when the input needed normalization (`\r` or
+  // `\0`): the state owns that buffer and src_ptr points into it. Empty
+  // otherwise: src_ptr then points into the caller's bytes, which outlive the
+  // state (`markdown_to_html` keeps them in a local declared before it).
   src : ArrayList(u8),
   // raw pointer for fast byte access
   src_ptr : *u8,
@@ -113,8 +116,9 @@ _normalize_source :: (fn(src_p : *u8, len : i32) -> ArrayList(u8))({
   out
 });
 
-// Build BlockState from already-normalized source (rare path — only when \r or \0 found)
-_build_block_state_from_normalized :: (fn(src : &ArrayList(u8), env : &Env, renderer : *HtmlRenderer, options : *Options) -> BlockState)({
+// Build BlockState from already-normalized source (rare path — only when \r or \0 found).
+// It takes the normalized bytes by value: the state owns them.
+_build_block_state_from_normalized :: (fn(src : ArrayList(u8), env : &Env, renderer : *HtmlRenderer, options : *Options) -> BlockState)({
   (len : i32) = i32(src.len());
   (est_lines : usize) = ((usize(len) / usize(40)) + usize(16));
   (b_marks : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
@@ -308,7 +312,7 @@ impl(
     });
     if(needs_normalize, {
       (norm_src : ArrayList(u8)) = _normalize_source(src_p, len);
-      return(_build_block_state_from_normalized(&norm_src, env, renderer, options));
+      return(_build_block_state_from_normalized(norm_src, env, renderer, options));
     });
 
     // Line scanning: precompute line markers
@@ -413,7 +417,7 @@ impl(
     bs_ptr := bs_count.ptr().unwrap();
     pf_ptr := pipe_flags.ptr().unwrap();
     Self(
-      src : src,
+      src : ArrayList(u8).new(),
       src_ptr : src_p,
       src_len : len,
       b_marks : b_marks,

@@ -13,14 +13,15 @@ pragma(Pragma.AllowUnsafe);
 { string_bytes } :: import("./common/utils.yo");
 
 // Convert markdown source to HTML.
-// `options` is taken BY VALUE, not as `*(Options)`. It is never mutated here —
-// it is only handed down to the renderer and the block state, which want a
-// reference for cost. Taking the address is the LIBRARY's business, so it
-// happens below, inside a file that is already `Pragma.AllowUnsafe`; asking
-// every caller to write `&opts` pushed that unsafe out to every consumer for
-// no benefit.
+// `options` is a read-only borrow, not a `*(Options)`. It is never mutated
+// here — it is only handed down to the renderer and the block state, which
+// want a pointer for cost. Taking the address is the LIBRARY's business, so it
+// happens below, inside a file that is already `Pragma.AllowUnsafe`. The
+// address is of a local copy: a `&T` parameter is passed as a copy and has no
+// stable address of its own, so `addr_of(options)` is Yo's error E0921.
 markdown_to_html :: (fn(src : &String, options : &Options) -> String)({
-  (opts_ref : *Options) = addr_of(options);
+  (opts_local : Options) = options.clone();
+  (opts_ref : *Options) = addr_of(opts_local);
 
   // 1. Create environment for link references
   (env : Env) = new_env();

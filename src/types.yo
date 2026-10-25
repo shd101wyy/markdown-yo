@@ -53,6 +53,7 @@ Options :: struct(
   enable_source_map : bool,
   max_nesting : i32 // Max nesting depth
 );
+derive(Options, Clone);
 
 // An abbreviation entry: byte ranges into the source for pattern and title
 AbbrEntry :: struct(

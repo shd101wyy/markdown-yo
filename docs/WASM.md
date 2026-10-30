@@ -5,13 +5,13 @@ A high-performance Markdown-to-HTML converter compiled to WebAssembly.
 ## Installation
 
 ```bash
-npm install markdown-yo
+npm install @shd101wyy/markdown-yo
 ```
 
 ## Quick Start
 
 ```js
-import { createRenderer } from "markdown-yo";
+import { createRenderer } from "@shd101wyy/markdown-yo";
 
 const md = await createRenderer();
 const html = md.render("# Hello\n\n**World**");
@@ -80,7 +80,7 @@ Release WASM module resources. The renderer should not be used after calling thi
 ### Node.js
 
 ```js
-const { createRenderer } = require("markdown-yo");
+const { createRenderer } = require("@shd101wyy/markdown-yo");
 
 async function main() {
   const md = await createRenderer();
@@ -103,7 +103,7 @@ main();
 ### Browser (bundler)
 
 ```js
-import { createRenderer } from "markdown-yo";
+import { createRenderer } from "@shd101wyy/markdown-yo";
 
 const md = await createRenderer();
 document.getElementById("preview").innerHTML = md.render(markdownSource);
@@ -112,8 +112,8 @@ document.getElementById("preview").innerHTML = md.render(markdownSource);
 ### Browser (script tag)
 
 ```html
-<script src="https://unpkg.com/markdown-yo/markdown-yo-wasm-api.js"></script>
-<script src="https://unpkg.com/markdown-yo/index.js"></script>
+<script src="https://unpkg.com/@shd101wyy/markdown-yo/markdown-yo-wasm-api.js"></script>
+<script src="https://unpkg.com/@shd101wyy/markdown-yo/index.js"></script>
 <script>
   markdownYo.createRenderer().then((md) => {
     const html = md.render("# Hello from **markdown-yo**!");
@@ -135,7 +135,7 @@ const md = await createRenderer({
 ### TypeScript
 
 ```ts
-import { createRenderer, type RenderOptions } from "markdown-yo";
+import { createRenderer, type RenderOptions } from "@shd101wyy/markdown-yo";
 
 const md = await createRenderer();
 

@@ -82,7 +82,7 @@ export interface WasmOptions {
  *
  * @example
  * ```ts
- * import { createRenderer } from "markdown-yo";
+ * import { createRenderer } from "@shd101wyy/markdown-yo";
  *
  * const md = await createRenderer();
  * const html = md.render("# Hello\n\n**World**");

@@ -14,7 +14,7 @@ A **fast** Markdown parser compiled to WebAssembly.
 ## Code Example
 
 \`\`\`javascript
-const { createRenderer } = require("markdown-yo");
+const { createRenderer } = require("@shd101wyy/markdown-yo");
 const renderer = createRenderer();
 const html = await renderer.render("# Hello", { html: true, math: true });
 \`\`\`

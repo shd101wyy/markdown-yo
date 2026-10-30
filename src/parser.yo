@@ -1,4 +1,4 @@
-// markdown_yo — Main parser orchestrator
+// markdown-yo — Main parser orchestrator
 //
 // Top-level API: normalize → block parse → HTML output.
 // SAX-style: block parser calls renderer directly, inline parser uses

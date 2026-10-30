@@ -1,8 +1,8 @@
-# AGENTS.md — markdown_yo
+# AGENTS.md — markdown-yo
 
 ## Project Overview
 
-markdown_yo is a fast, SAX-style markdown-to-HTML parser written in Yo.
+markdown-yo is a fast, SAX-style markdown-to-HTML parser written in Yo.
 It follows markdown-it's parsing rules for output compatibility while using
 md4c-inspired architecture for maximum performance.
 
@@ -50,7 +50,7 @@ Source str ──► Normalize ──► Block Parser ──► Inline Parser �
 The Yo version is pinned in `.yo-version`; `yo` on your PATH honours it.
 
 ```bash
-yo build                               # native binary → yo-out/<target>/bin/markdown_yo
+yo build                               # native binary → yo-out/<target>/bin/markdown-yo
 yo build wasm_exe                      # WebAssembly build (needs emsdk)
 yo test ./tests --parallel 1           # unit tests
 node scripts/run_fixture_tests.js      # markdown-it compatibility fixtures
@@ -69,7 +69,7 @@ onto the NEXT item (shd101wyy/Yo#1086).
 version tag by hand.**
 
 ```bash
-gh workflow run release.yml --repo shd101wyy/markdown_yo -f bump=patch   # or bump=minor
+gh workflow run release.yml --repo shd101wyy/markdown-yo -f bump=patch   # or bump=minor
 ```
 
 The workflow:

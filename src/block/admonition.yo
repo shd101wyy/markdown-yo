@@ -1,4 +1,4 @@
-// markdown_yo — Admonition block rule
+// markdown-yo — Admonition block rule
 //
 // Syntax: !!! type [optional title]          — static admonition
 //         ??? type [optional title]          — collapsible, starts closed

@@ -1,4 +1,4 @@
-// markdown_yo — Inline math marker rule
+// markdown-yo — Inline math marker rule
 //
 // Handles $...$ for inline math and $$...$$ for block math (inline context).
 // Output format matches crossnote/markdown-it-texmath:

@@ -25,7 +25,7 @@ const yoOutDir = path.join(__dirname, "..", "yo-out");
 let yoBin = null;
 if (fs.existsSync(yoOutDir)) {
   for (const target of fs.readdirSync(yoOutDir)) {
-    const candidate = path.join(yoOutDir, target, "bin", "markdown_yo");
+    const candidate = path.join(yoOutDir, target, "bin", "markdown-yo");
     if (fs.existsSync(candidate)) {
       yoBin = candidate;
       break;
@@ -34,7 +34,7 @@ if (fs.existsSync(yoOutDir)) {
 }
 if (!yoBin) {
   console.error(
-    `ERROR: Binary not found in yo-out/*/bin/markdown_yo\nRun \`yo build\` first.`,
+    `ERROR: Binary not found in yo-out/*/bin/markdown-yo\nRun \`yo build\` first.`,
   );
   process.exit(1);
 }

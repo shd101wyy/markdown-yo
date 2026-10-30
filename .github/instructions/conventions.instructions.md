@@ -1,4 +1,4 @@
-# Conventions for markdown_yo
+# Conventions for markdown-yo
 
 ## Naming
 - snake_case for all identifiers (functions, variables, types, files)

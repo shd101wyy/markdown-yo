@@ -1,4 +1,4 @@
-// markdown_yo — Source normalization
+// markdown-yo — Source normalization
 //
 // Single-pass: CRLF → LF, lone CR → LF, NULL → U+FFFD.
 // Returns the normalized copy when changes are needed; otherwise a copy of the input.

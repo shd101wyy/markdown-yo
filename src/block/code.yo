@@ -1,4 +1,4 @@
-// markdown_yo — Indented code block
+// markdown-yo — Indented code block
 //
 // Matches: lines indented by 4+ spaces (not inside a list with deeper indent)
 pragma(Pragma.AllowUnsafe);

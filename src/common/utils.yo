@@ -1,4 +1,4 @@
-// markdown_yo — Common utilities
+// markdown-yo — Common utilities
 //
 // Character classification and string helpers for markdown parsing.
 // Adapted from markdown_it_yo common/utils.yo for SAX-style:

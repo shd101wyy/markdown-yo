@@ -1,14 +1,16 @@
-# markdown_yo
+# markdown-yo
 
 A high-performance markdown-to-HTML converter written in [Yo](https://github.com/shd101wyy/Yo).
 
+> **Renamed:** this package was `markdown_yo` until v0.0.22 (2026-10-30). The npm package, the release archives and the binary are now `markdown-yo`; the old npm package `markdown_yo` is deprecated.
+
 Inspired by [markdown-it](https://github.com/markdown-it/markdown-it) (parsing rules & test fixtures), [md4c](https://github.com/mity/md4c) (performance-focused C design), and [markdown-wasm](https://github.com/rsms/markdown-wasm) (WASM compilation target).
 
-> **See also:** [markdown_it_yo](https://github.com/shd101wyy/markdown_it_yo) — a separate 1:1 direct port of markdown-it to Yo. markdown_yo is a **custom implementation** optimized for speed, while markdown_it_yo faithfully mirrors the original JS architecture for easier maintenance.
+> **See also:** [markdown_it_yo](https://github.com/shd101wyy/markdown_it_yo) — a separate 1:1 direct port of markdown-it to Yo. markdown-yo is a **custom implementation** optimized for speed, while markdown_it_yo faithfully mirrors the original JS architecture for easier maintenance.
 
 ## Architecture
 
-markdown_yo uses a **hybrid SAX + token** architecture:
+markdown-yo uses a **hybrid SAX + token** architecture:
 
 - **Block parser** — SAX-style (streaming). Block rules (paragraph, heading, list, blockquote, code block, table, etc.) call renderer methods **directly** during parsing — no intermediate block token objects are allocated. For example, the heading rule calls `renderer.open_heading(level)` and `renderer.close_heading(level)` inline.
 
@@ -38,14 +40,14 @@ This is in contrast to [markdown_it_yo](https://github.com/shd101wyy/markdown_it
 
 ## npm Package (WebAssembly)
 
-Use markdown_yo in JavaScript/TypeScript via WebAssembly:
+Use markdown-yo in JavaScript/TypeScript via WebAssembly:
 
 ```bash
-npm install markdown_yo
+npm install markdown-yo
 ```
 
 ```js
-import { createRenderer } from "markdown_yo";
+import { createRenderer } from "markdown-yo";
 
 const md = await createRenderer();
 const html = md.render("# Hello\n\n**World**");
@@ -71,11 +73,11 @@ See [docs/WASM.md](docs/WASM.md) for the full API reference, browser usage, and 
 
 ## Live Demo
 
-Try markdown_yo in the browser — no install needed:
+Try markdown-yo in the browser — no install needed:
 
-👉 **[Live Demo](https://shd101wyy.github.io/markdown_yo/)**
+👉 **[Live Demo](https://shd101wyy.github.io/markdown-yo/)**
 
-The demo compiles markdown_yo to WebAssembly (383 KB) and renders markdown in real-time as you type. Options for CommonMark mode, HTML tags, and typographic replacements are available.
+The demo compiles markdown-yo to WebAssembly (383 KB) and renders markdown in real-time as you type. Options for CommonMark mode, HTML tags, and typographic replacements are available.
 
 ## Benchmarks
 
@@ -104,19 +106,19 @@ yo build wasm_exe
 
 # Build WASM API module (browser + Node.js)
 yo build wasm_api
-./scripts/build_demo.sh  # or manually: copy yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.{js,wasm} to demo/
+./scripts/build_demo.sh  # or manually: copy yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.{js,wasm} to demo/
 ```
 
 ## Use as a library
 
-`markdown_yo` is a Yo package, so add it and import it by name — no paths:
+`markdown-yo` is a Yo package, so add it and import it by name — no paths:
 
 ```bash
-yo add shd101wyy/markdown_yo
+yo add shd101wyy/markdown-yo
 ```
 
 ```rust
-{ markdown_to_html, Options, default_options } :: import("markdown_yo");
+{ markdown_to_html, Options, default_options } :: import("markdown-yo");
 { println } :: import("std/fmt");
 
 main :: (fn() -> unit)({
@@ -145,29 +147,29 @@ the extensions off, and each is a field you can flip (`enable_math`,
 
 ```bash
 # Convert a file
-markdown_yo file.md > output.html
+markdown-yo file.md > output.html
 
 # Read from stdin
-cat file.md | markdown_yo -
+cat file.md | markdown-yo -
 
 # Options
-markdown_yo --html --typographer file.md
-markdown_yo --commonmark file.md
+markdown-yo --html --typographer file.md
+markdown-yo --commonmark file.md
 
 # Inline extensions
-markdown_yo --subscript --superscript --mark --math file.md
-markdown_yo --emoji --wikilink --critic file.md
+markdown-yo --subscript --superscript --mark --math file.md
+markdown-yo --emoji --wikilink --critic file.md
 
 # Block extensions
-markdown_yo --abbr --deflist --admonition --callout --footnote file.md
+markdown-yo --abbr --deflist --admonition --callout --footnote file.md
 
 # Enable all extensions at once
-markdown_yo --full-features file.md
+markdown-yo --full-features file.md
 
 # Source map (adds data-source-line attributes for editor integration)
-markdown_yo --source-map file.md
+markdown-yo --source-map file.md
 
-markdown_yo --help
+markdown-yo --help
 ```
 
 ## Run

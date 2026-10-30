@@ -1,4 +1,4 @@
-// markdown_yo — Inline footnote rules
+// markdown-yo — Inline footnote rules
 //
 // Handles two types:
 // 1. Footnote reference: [^label]

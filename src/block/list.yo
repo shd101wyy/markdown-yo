@@ -1,4 +1,4 @@
-// markdown_yo — List rule (ordered and unordered)
+// markdown-yo — List rule (ordered and unordered)
 //
 // Closely follows markdown-it's list rule implementation.
 // Detection logic lives here; full parsing with recursive block_tokenize

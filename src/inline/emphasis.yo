@@ -1,4 +1,4 @@
-// markdown_yo — Inline emphasis marker rule
+// markdown-yo — Inline emphasis marker rule
 //
 // Handles * and _ markers. Pushes a text token for the markers AND a Delimiter
 // entry for later resolution by emphasis_post.

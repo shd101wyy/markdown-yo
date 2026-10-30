@@ -1,4 +1,4 @@
-// markdown_yo — Inline entity rule
+// markdown-yo — Inline entity rule
 //
 // Matches: &amp;, &lt;, &#123;, &#x1F4A9; etc.
 pragma(Pragma.AllowUnsafe);

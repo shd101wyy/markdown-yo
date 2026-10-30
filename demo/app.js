@@ -1,6 +1,6 @@
-// markdown_yo demo — WASM bridge + live preview
+// markdown-yo demo — WASM bridge + live preview
 
-const SAMPLE = `# markdown_yo
+const SAMPLE = `# markdown-yo
 
 A **fast** Markdown parser compiled to WebAssembly.
 
@@ -14,7 +14,7 @@ A **fast** Markdown parser compiled to WebAssembly.
 ## Code Example
 
 \`\`\`javascript
-const { createRenderer } = require("@aspect-build/markdown_yo");
+const { createRenderer } = require("markdown-yo");
 const renderer = createRenderer();
 const html = await renderer.render("# Hello", { html: true, math: true });
 \`\`\`
@@ -29,7 +29,7 @@ def fibonacci(n):
 
 ## Table
 
-| Feature       | markdown_yo | markdown-it |
+| Feature       | markdown-yo | markdown-it |
 |---------------|:-----------:|:-----------:|
 | CommonMark    | ✓           | ✓           |
 | GFM tables    | ✓           | plugin      |

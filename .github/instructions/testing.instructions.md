@@ -1,4 +1,4 @@
-# Testing Instructions for markdown_yo
+# Testing Instructions for markdown-yo
 
 ## Running Tests
 
@@ -6,8 +6,8 @@
 # Build Yo compiler first
 cd ~/Workspace/Yo && bun run build
 
-# Run markdown_yo tests
-cd ~/Workspace/markdown_yo && ~/Workspace/Yo/yo-cli build test
+# Run markdown-yo tests
+cd ~/Workspace/markdown-yo && ~/Workspace/Yo/yo-cli build test
 
 # Run a single test file (always use --parallel 1)
 ~/Workspace/Yo/yo-cli test ./tests/some_test.test.yo --parallel 1
@@ -55,8 +55,8 @@ test "heading level 1", (fn() -> unit)({
 
 Use the CLI to compare output with markdown-it:
 ```bash
-# Generate HTML with markdown_yo
-./yo-out/*/bin/markdown_yo input.md > output_yo.html
+# Generate HTML with markdown-yo
+./yo-out/*/bin/markdown-yo input.md > output_yo.html
 
 # Generate HTML with markdown-it
 node -e "const md = require('markdown-it')(); const fs = require('fs'); process.stdout.write(md.render(fs.readFileSync('input.md', 'utf8')))" > output_js.html

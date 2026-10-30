@@ -1,4 +1,4 @@
-// markdown_yo — Inline escape rule
+// markdown-yo — Inline escape rule
 //
 // Matches: \X where X is an ASCII punctuation character
 // Produces a text token for the escaped character.

@@ -1,4 +1,4 @@
-// markdown_yo — Paragraph rule (fallback)
+// markdown-yo — Paragraph rule (fallback)
 //
 // The paragraph rule is the fallback rule that matches any non-empty line.
 // It collects consecutive lines until an empty line, EOF, or a terminator rule.

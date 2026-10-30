@@ -1,4 +1,4 @@
-// markdown_yo — Inline strikethrough marker rule
+// markdown-yo — Inline strikethrough marker rule
 //
 // Handles ~~ markers. Pushes a text token and Delimiter for later resolution.
 // Follows the same flanking rules as emphasis.

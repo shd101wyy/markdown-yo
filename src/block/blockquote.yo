@@ -1,4 +1,4 @@
-// markdown_yo — Blockquote rule
+// markdown-yo — Blockquote rule
 //
 // Matches: > prefixed lines
 // Returns bq_end line number (> start_line if matched, -1 if no match).

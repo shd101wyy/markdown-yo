@@ -1,9 +1,9 @@
 /**
- * markdown_yo — High-performance Markdown-to-HTML converter (WebAssembly)
+ * markdown-yo — High-performance Markdown-to-HTML converter (WebAssembly)
  *
  * @example
  * ```js
- * import { createRenderer } from "markdown_yo";
+ * import { createRenderer } from "markdown-yo";
  * const md = await createRenderer();
  * const html = md.render("# Hello\n\nWorld");
  * ```
@@ -12,7 +12,7 @@
 // Re-export the Emscripten module loader
 const createMarkdownYo =
   typeof require !== "undefined"
-    ? require("./markdown_yo_wasm_api.js")
+    ? require("./markdown-yo-wasm-api.js")
     : undefined;
 
 /**
@@ -88,7 +88,7 @@ function buildFlags(options) {
  *
  * @example
  * ```js
- * import { createRenderer } from "markdown_yo";
+ * import { createRenderer } from "markdown-yo";
  *
  * const md = await createRenderer();
  * console.log(md.render("**bold**"));
@@ -108,7 +108,7 @@ async function createRenderer(wasmOptions, defaultOptions) {
     loader = createMarkdownYo;
   } else {
     // ESM / browser dynamic import
-    const mod = await import("./markdown_yo_wasm_api.js");
+    const mod = await import("./markdown-yo-wasm-api.js");
     loader = mod.default || mod.createMarkdownYo || mod;
   }
 

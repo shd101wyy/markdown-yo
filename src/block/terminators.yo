@@ -1,4 +1,4 @@
-// markdown_yo — Block terminator checks
+// markdown-yo — Block terminator checks
 //
 // Used by paragraph, lheading and reference to determine if a line starts a new block.
 // Calls other block rules in silent mode.

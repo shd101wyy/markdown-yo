@@ -1,4 +1,4 @@
-// markdown_yo — Inline link rule
+// markdown-yo — Inline link rule
 //
 // Two-phase approach matching markdown-it:
 // 1. inline_link_open: when [ or ![ is seen, push a bracket marker

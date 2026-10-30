@@ -1,4 +1,4 @@
-// markdown_yo — Strikethrough post-processor
+// markdown-yo — Strikethrough post-processor
 //
 // Matches ~~ delimiter pairs and marks them for rendering.
 pragma(Pragma.AllowUnsafe);

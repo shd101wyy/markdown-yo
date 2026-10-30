@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Benchmark harness: compares markdown-it (JS) vs markdown_yo (native + WASM).
+// Benchmark harness: compares markdown-it (JS) vs markdown-yo (native + WASM).
 //
 // Usage:
 //   node benchmark/run.js              # Run all benchmarks
@@ -32,7 +32,7 @@ let nativeBin = null;
 if (fs.existsSync(yoOutDir)) {
   for (const target of fs.readdirSync(yoOutDir)) {
     if (target.startsWith('wasm')) continue;
-    const candidate = path.join(yoOutDir, target, 'bin', 'markdown_yo');
+    const candidate = path.join(yoOutDir, target, 'bin', 'markdown-yo');
     if (fs.existsSync(candidate)) {
       nativeBin = candidate;
       break;
@@ -45,7 +45,7 @@ let wasmJs = null;
 if (fs.existsSync(yoOutDir)) {
   for (const target of fs.readdirSync(yoOutDir)) {
     if (!target.startsWith('wasm')) continue;
-    const candidate = path.join(yoOutDir, target, 'bin', 'markdown_yo_wasm_exe.js');
+    const candidate = path.join(yoOutDir, target, 'bin', 'markdown-yo-wasm-exe.js');
     if (fs.existsSync(candidate)) {
       wasmJs = candidate;
       break;
@@ -61,7 +61,7 @@ if (!fs.existsSync(samplesDir) || fs.readdirSync(samplesDir).length === 0) {
 
 // Check native binary
 if (!nativeBin) {
-  console.error('Native binary not found in yo-out/*/bin/markdown_yo');
+  console.error('Native binary not found in yo-out/*/bin/markdown-yo');
   console.error('Build with: yo build');
   process.exit(1);
 }
@@ -158,7 +158,7 @@ function stats(times) {
 
 // Run benchmarks
 console.log(`\n${'═'.repeat(72)}`);
-console.log(`  markdown_yo Benchmark — ${WARMUP} warmup, ${ITERATIONS} iterations`);
+console.log(`  markdown-yo Benchmark — ${WARMUP} warmup, ${ITERATIONS} iterations`);
 console.log(`${'═'.repeat(72)}\n`);
 
 const results = [];

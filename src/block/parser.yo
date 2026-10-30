@@ -1,4 +1,4 @@
-// markdown_yo — Block parser
+// markdown-yo — Block parser
 //
 // Dispatches block-level rules in markdown-it order.
 // Each rule either matches and advances state.line, or returns false.

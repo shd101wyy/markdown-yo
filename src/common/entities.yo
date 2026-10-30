@@ -1,4 +1,4 @@
-// markdown_yo — HTML5 named entity lookup table
+// markdown-yo — HTML5 named entity lookup table
 // Auto-generated from https://html.spec.whatwg.org/entities.json
 // 2125 entities
 pragma(Pragma.AllowUnsafe);

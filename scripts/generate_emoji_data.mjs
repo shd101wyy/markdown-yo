@@ -47,7 +47,7 @@ for (const [name, emoji] of entries) {
 
 // Generate the Yo function
 let out = '';
-out += '// markdown_yo — Emoji shortname lookup table\n';
+out += '// markdown-yo — Emoji shortname lookup table\n';
 out += '// Auto-generated from markdown-it-emoji full.mjs\n';
 out += `// ${entries.length} emoji entries\n`;
 out += '//\n';

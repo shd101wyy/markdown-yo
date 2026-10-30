@@ -1,4 +1,4 @@
-// markdown_yo — Footnote definition block rule
+// markdown-yo — Footnote definition block rule
 //
 // Syntax: [^label]: content
 // Content can span multiple lines if indented by 4 spaces.

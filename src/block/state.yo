@@ -1,4 +1,4 @@
-// markdown_yo — Block parser state
+// markdown-yo — Block parser state
 //
 // Tracks line positions, indentation, and nesting for block-level parsing.
 // Line markers are precomputed once for O(1) line access.

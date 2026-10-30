@@ -11,7 +11,7 @@ let yoBin = null;
 if (fs.existsSync(yoOutDir)) {
   for (const target of fs.readdirSync(yoOutDir)) {
     if (target.startsWith('wasm')) continue;
-    const candidate = path.join(yoOutDir, target, 'bin', 'markdown_yo');
+    const candidate = path.join(yoOutDir, target, 'bin', 'markdown-yo');
     if (fs.existsSync(candidate)) { yoBin = candidate; break; }
   }
 }

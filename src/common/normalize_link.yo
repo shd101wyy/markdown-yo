@@ -1,4 +1,4 @@
-// markdown_yo — URL normalization (percent-encoding)
+// markdown-yo — URL normalization (percent-encoding)
 //
 // Matches mdurl encode behavior:
 // - Alphanumeric chars pass through

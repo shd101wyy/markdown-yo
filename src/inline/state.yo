@@ -1,4 +1,4 @@
-// markdown_yo — Inline parser state
+// markdown-yo — Inline parser state
 //
 // Tracks position, delimiters, and inline tokens during inline parsing.
 pragma(Pragma.AllowUnsafe);

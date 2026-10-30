@@ -29,16 +29,16 @@ bench_*.md
 .devenv*
 Thumbs.db
 
-markdown_yo*
-!markdown_yo/
+markdown-yo*
+!markdown-yo/
 # Benchmark samples (generated)
 benchmark/samples/
 
 # WASM artifacts in demo/ (built, not committed)
-demo/markdown_yo_wasm_api.js
-demo/markdown_yo_wasm_api.wasm
+demo/markdown-yo-wasm-api.js
+demo/markdown-yo-wasm-api.wasm
 
 # WASM artifacts in npm/ (copied during release build)
-npm/markdown_yo_wasm_api.js
-npm/markdown_yo_wasm_api.wasm
+npm/markdown-yo-wasm-api.js
+npm/markdown-yo-wasm-api.wasm
 npm/README.md

@@ -1,4 +1,4 @@
-// markdown_yo — ATX heading rule
+// markdown-yo — ATX heading rule
 //
 // Matches: # H1 ... ###### H6
 // Closing hashes are optional and stripped.

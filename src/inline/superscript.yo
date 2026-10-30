@@ -1,4 +1,4 @@
-// markdown_yo — Inline superscript marker rule
+// markdown-yo — Inline superscript marker rule
 //
 // Handles ^ markers for superscript: ^text^
 // No unescaped spaces/newlines inside superscript content.

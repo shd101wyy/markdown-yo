@@ -1,4 +1,4 @@
-// markdown_yo — Inline parser
+// markdown-yo — Inline parser
 //
 // Main dispatch loop for inline content.
 // Called by block rules (paragraph, heading, list items) after they've

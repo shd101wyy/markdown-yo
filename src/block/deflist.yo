@@ -1,4 +1,4 @@
-// markdown_yo — Definition list helpers
+// markdown-yo — Definition list helpers
 //
 // The main deflist handling is inlined in parser.yo (like lists)
 // because it needs recursive block_tokenize via `recur`.

@@ -1,4 +1,4 @@
-// markdown_yo — Inline autolink rule
+// markdown-yo — Inline autolink rule
 //
 // Matches: <protocol:...> (URI autolinks) and <email@domain.com> (email autolinks)
 // URI: scheme must be [a-zA-Z][a-zA-Z0-9+.-]{1,31} followed by ':'

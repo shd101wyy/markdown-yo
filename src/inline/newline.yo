@@ -1,4 +1,4 @@
-// markdown_yo — Inline newline rule
+// markdown-yo — Inline newline rule
 //
 // Handles hard break (2+ trailing spaces + \n, or \\\n) and soft break (\n).
 pragma(Pragma.AllowUnsafe);

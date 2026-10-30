@@ -3,7 +3,7 @@
  *
  * @example
  * ```js
- * import { createRenderer } from "markdown-yo";
+ * import { createRenderer } from "@shd101wyy/markdown-yo";
  * const md = await createRenderer();
  * const html = md.render("# Hello\n\nWorld");
  * ```
@@ -88,7 +88,7 @@ function buildFlags(options) {
  *
  * @example
  * ```js
- * import { createRenderer } from "markdown-yo";
+ * import { createRenderer } from "@shd101wyy/markdown-yo";
  *
  * const md = await createRenderer();
  * console.log(md.render("**bold**"));

@@ -2,7 +2,7 @@
 
 A high-performance markdown-to-HTML converter written in [Yo](https://github.com/shd101wyy/Yo).
 
-> **Renamed:** this package was `markdown_yo` until v0.0.22 (2026-10-30). The npm package, the release archives and the binary are now `markdown-yo`; the old npm package `markdown_yo` is deprecated.
+> **Renamed:** this package was `markdown_yo` until v0.0.22 (2026-10-30). The release archives and the binary are now `markdown-yo`, and the npm package is `@shd101wyy/markdown-yo` (npm refuses `markdown-yo` as too similar to the old name); the old npm package `markdown_yo` is deprecated.
 
 Inspired by [markdown-it](https://github.com/markdown-it/markdown-it) (parsing rules & test fixtures), [md4c](https://github.com/mity/md4c) (performance-focused C design), and [markdown-wasm](https://github.com/rsms/markdown-wasm) (WASM compilation target).
 
@@ -43,11 +43,11 @@ This is in contrast to [markdown_it_yo](https://github.com/shd101wyy/markdown_it
 Use markdown-yo in JavaScript/TypeScript via WebAssembly:
 
 ```bash
-npm install markdown-yo
+npm install @shd101wyy/markdown-yo
 ```
 
 ```js
-import { createRenderer } from "markdown-yo";
+import { createRenderer } from "@shd101wyy/markdown-yo";
 
 const md = await createRenderer();
 const html = md.render("# Hello\n\n**World**");

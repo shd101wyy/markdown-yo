@@ -218,7 +218,7 @@ jobs:
 
             ## npm
             ```
-            npm install markdown-yo@${{ steps.version.outputs.version }}
+            npm install @shd101wyy/markdown-yo@${{ steps.version.outputs.version }}
             ```
           draft: false
           prerelease: false

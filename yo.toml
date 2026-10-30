@@ -1,11 +1,11 @@
 [package]
-name = "markdown_yo"
+name = "markdown-yo"
 version = "0.0.21"
 description = "A Markdown parser and renderer written in Yo"
 license = "MIT"
 
 [modules]
-# `import("markdown_yo")` — the module root moved here from `build.module`,
+# `import("markdown-yo")` — the module root moved here from `build.module`,
 # which no longer takes a `root`. This is what the Yo compiler itself imports
 # for `yo doc --format html`.
 default = "src/lib.yo"

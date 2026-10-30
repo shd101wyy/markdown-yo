@@ -1,6 +1,6 @@
 [package]
 name = "markdown-yo"
-version = "0.0.21"
+version = "0.0.22"
 description = "A Markdown parser and renderer written in Yo"
 license = "MIT"
 

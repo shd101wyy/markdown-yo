@@ -1,4 +1,4 @@
-// markdown_yo — Backslash escape processing and entity decoding
+// markdown-yo — Backslash escape processing and entity decoding
 //
 // Shared by inline render pass and reference definition parser.
 pragma(Pragma.AllowUnsafe);

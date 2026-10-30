@@ -1,4 +1,4 @@
-// markdown_yo — Inline HTML rule
+// markdown-yo — Inline HTML rule
 //
 // Matches valid HTML: open tags, close tags, comments, processing instructions,
 // declarations, and CDATA sections per CommonMark spec.

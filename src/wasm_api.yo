@@ -1,4 +1,4 @@
-// markdown_yo — WASM API for browser demo
+// markdown-yo — WASM API for browser demo
 //
 // Exports C-callable functions for Emscripten:
 //   wasm_render(input_ptr, input_len, flags) -> *(u8)

@@ -1,4 +1,4 @@
-// markdown_yo — Setext heading rule (lheading)
+// markdown-yo — Setext heading rule (lheading)
 //
 // Matches: text followed by === (h1) or --- (h2) underline
 pragma(Pragma.AllowUnsafe);

@@ -1,4 +1,4 @@
-// markdown_yo — HTML renderer
+// markdown-yo — HTML renderer
 //
 // SAX-style: receives direct calls from block and inline parsers.
 // Writes directly to an ArrayList(u8) output buffer — no intermediate Strings.

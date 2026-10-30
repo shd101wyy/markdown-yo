@@ -1,17 +1,17 @@
-# markdown_yo — WebAssembly API
+# markdown-yo — WebAssembly API
 
 A high-performance Markdown-to-HTML converter compiled to WebAssembly.
 
 ## Installation
 
 ```bash
-npm install markdown_yo
+npm install markdown-yo
 ```
 
 ## Quick Start
 
 ```js
-import { createRenderer } from "markdown_yo";
+import { createRenderer } from "markdown-yo";
 
 const md = await createRenderer();
 const html = md.render("# Hello\n\n**World**");
@@ -80,7 +80,7 @@ Release WASM module resources. The renderer should not be used after calling thi
 ### Node.js
 
 ```js
-const { createRenderer } = require("markdown_yo");
+const { createRenderer } = require("markdown-yo");
 
 async function main() {
   const md = await createRenderer();
@@ -103,7 +103,7 @@ main();
 ### Browser (bundler)
 
 ```js
-import { createRenderer } from "markdown_yo";
+import { createRenderer } from "markdown-yo";
 
 const md = await createRenderer();
 document.getElementById("preview").innerHTML = md.render(markdownSource);
@@ -112,11 +112,11 @@ document.getElementById("preview").innerHTML = md.render(markdownSource);
 ### Browser (script tag)
 
 ```html
-<script src="https://unpkg.com/markdown_yo/markdown_yo_wasm_api.js"></script>
-<script src="https://unpkg.com/markdown_yo/index.js"></script>
+<script src="https://unpkg.com/markdown-yo/markdown-yo-wasm-api.js"></script>
+<script src="https://unpkg.com/markdown-yo/index.js"></script>
 <script>
   markdownYo.createRenderer().then((md) => {
-    const html = md.render("# Hello from **markdown_yo**!");
+    const html = md.render("# Hello from **markdown-yo**!");
     document.body.innerHTML = html;
   });
 </script>
@@ -135,7 +135,7 @@ const md = await createRenderer({
 ### TypeScript
 
 ```ts
-import { createRenderer, type RenderOptions } from "markdown_yo";
+import { createRenderer, type RenderOptions } from "markdown-yo";
 
 const md = await createRenderer();
 
@@ -158,7 +158,7 @@ const html: string = md.render("# Hello", opts);
 
 ## Live Demo
 
-Try it in the browser: **https://shd101wyy.github.io/markdown_yo/**
+Try it in the browser: **https://shd101wyy.github.io/markdown-yo/**
 
 ## Building from Source
 
@@ -172,6 +172,6 @@ curl -sSL https://shd101wyy.github.io/Yo/install.sh | sh
 yo build wasm_api
 
 # Output files:
-#   yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.js
-#   yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.wasm
+#   yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.js
+#   yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.wasm
 ```

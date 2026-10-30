@@ -1,4 +1,4 @@
-// markdown_yo — HTML block rule
+// markdown-yo — HTML block rule
 //
 // Matches: HTML blocks (types 1-7 per CommonMark spec)
 pragma(Pragma.AllowUnsafe);

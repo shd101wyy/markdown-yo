@@ -1,4 +1,4 @@
-// markdown_yo — Callout detection for blockquotes
+// markdown-yo — Callout detection for blockquotes
 //
 // Syntax: > [!type]+/- optional title
 // where type is a known callout type (note, tip, warning, etc.)

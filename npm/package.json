@@ -1,5 +1,5 @@
 {
-  "name": "markdown_yo",
+  "name": "markdown-yo",
   "version": "0.0.22",
   "description": "A high-performance Markdown-to-HTML converter compiled to WebAssembly",
   "main": "index.js",
@@ -7,8 +7,8 @@
   "files": [
     "index.js",
     "index.d.ts",
-    "markdown_yo_wasm_api.js",
-    "markdown_yo_wasm_api.wasm",
+    "markdown-yo-wasm-api.js",
+    "markdown-yo-wasm-api.wasm",
     "README.md"
   ],
   "keywords": [
@@ -21,9 +21,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shd101wyy/markdown_yo.git"
+    "url": "git+https://github.com/shd101wyy/markdown-yo.git"
   },
-  "homepage": "https://shd101wyy.github.io/markdown_yo/",
+  "homepage": "https://shd101wyy.github.io/markdown-yo/",
   "license": "MIT",
   "author": "shd101wyy"
 }

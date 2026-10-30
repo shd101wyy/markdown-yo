@@ -1,4 +1,4 @@
-// markdown_yo — Horizontal rule
+// markdown-yo — Horizontal rule
 //
 // Matches: ---, ***, ___ (with optional spaces between chars, 3+ required)
 pragma(Pragma.AllowUnsafe);

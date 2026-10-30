@@ -1,4 +1,4 @@
-// markdown_yo — Inline mark/highlight marker rule
+// markdown-yo — Inline mark/highlight marker rule
 //
 // Handles == markers for <mark>: ==highlighted text==
 // Uses emphasis-style flanking rules and delimiter pair resolution.

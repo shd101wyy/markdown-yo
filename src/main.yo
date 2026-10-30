@@ -1,9 +1,9 @@
-// markdown_yo CLI — convert markdown to HTML
+// markdown-yo CLI — convert markdown to HTML
 //
 // Usage:
-//   markdown_yo <file>       — render file to stdout
-//   markdown_yo              — read from stdin, render to stdout
-//   markdown_yo -            — read from stdin explicitly
+//   markdown-yo <file>       — render file to stdout
+//   markdown-yo              — read from stdin, render to stdout
+//   markdown-yo -            — read from stdin explicitly
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
 { println, print } :: import("std/fmt");
@@ -90,7 +90,7 @@ _read_stdin :: (fn() -> String)({
   String.from_bytes(buf)
 });
 
-_HELP_TEXT :: "markdown_yo — Fast markdown to HTML converter\n\nUsage:\n  markdown_yo [options] <file>   Render file to stdout\n  cat file.md | markdown_yo -   Read from stdin\n\nOptions:\n  --html            Enable HTML tags in source\n  --typographer     Enable typographic replacements\n  --no-lang-prefix  Remove language prefix from fenced code blocks\n  --commonmark      Use CommonMark preset\n  --subscript       Enable subscript (~text~)\n  --superscript     Enable superscript (^text^)\n  --mark            Enable mark/highlight (==text==)\n  --math            Enable math ($..$ and $$..$$)\n  --emoji           Enable emoji shortcodes (:smile:)\n  --wikilink        Enable wikilinks ([[page]] or [[page|text]])\n  --critic          Enable critic markup ({++add++}, {--del--}, etc.)\n  --abbr            Enable abbreviations (*[abbr]: expansion)\n  --deflist         Enable definition lists\n  --admonition      Enable admonition blocks (!!! type / ??? type / ???+ type)\n  --callout         Enable callouts (> [!type] title)\n  --footnote        Enable footnotes ([^id] and [^id]: content)\n  --source-map      Emit data-source-line attributes on block elements\n  --full-features   Enable all extensions\n  --repeat N        Run N iterations, output timing to stderr\n  -h, --help        Show this help\n";
+_HELP_TEXT :: "markdown-yo — Fast markdown to HTML converter\n\nUsage:\n  markdown-yo [options] <file>   Render file to stdout\n  cat file.md | markdown-yo -   Read from stdin\n\nOptions:\n  --html            Enable HTML tags in source\n  --typographer     Enable typographic replacements\n  --no-lang-prefix  Remove language prefix from fenced code blocks\n  --commonmark      Use CommonMark preset\n  --subscript       Enable subscript (~text~)\n  --superscript     Enable superscript (^text^)\n  --mark            Enable mark/highlight (==text==)\n  --math            Enable math ($..$ and $$..$$)\n  --emoji           Enable emoji shortcodes (:smile:)\n  --wikilink        Enable wikilinks ([[page]] or [[page|text]])\n  --critic          Enable critic markup ({++add++}, {--del--}, etc.)\n  --abbr            Enable abbreviations (*[abbr]: expansion)\n  --deflist         Enable definition lists\n  --admonition      Enable admonition blocks (!!! type / ??? type / ???+ type)\n  --callout         Enable callouts (> [!type] title)\n  --footnote        Enable footnotes ([^id] and [^id]: content)\n  --source-map      Emit data-source-line attributes on block elements\n  --full-features   Enable all extensions\n  --repeat N        Run N iterations, output timing to stderr\n  -h, --help        Show this help\n";
 
 main :: (fn() -> unit)({
   argv := args();

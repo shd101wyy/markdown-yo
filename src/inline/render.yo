@@ -1,4 +1,4 @@
-// markdown_yo — Inline token render pass
+// markdown-yo — Inline token render pass
 //
 // 1. Resolves emphasis/strikethrough delimiter pairs
 // 2. Runs smartquotes post-processing (when typographer is enabled)

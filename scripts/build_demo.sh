@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the browser WASM demo for markdown_yo.
+# Build the browser WASM demo for markdown-yo.
 # Usage: ./scripts/build_demo.sh [--yo-cli PATH]
 #
 # Output goes to demo/ (index.html, style.css, app.js, *.wasm, *.js glue).
@@ -14,8 +14,8 @@ echo "==> Building browser WASM API target..."
 
 # Copy WASM artifacts into demo/
 echo "==> Copying WASM artifacts to demo/..."
-cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.js   demo/markdown_yo_wasm_api.js
-cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.wasm demo/markdown_yo_wasm_api.wasm
+cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.js   demo/markdown-yo-wasm-api.js
+cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.wasm demo/markdown-yo-wasm-api.wasm
 
 echo "==> Demo ready in demo/"
 echo "    Serve with:  npx serve demo"

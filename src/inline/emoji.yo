@@ -1,4 +1,4 @@
-// markdown_yo — Inline emoji rule
+// markdown-yo — Inline emoji rule
 //
 // Matches :shortname: patterns and replaces them with Unicode emoji.
 // Uses the same pattern as entity.yo — validates at parse time, decodes at render time.

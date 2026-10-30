@@ -1,4 +1,4 @@
-// markdown_yo — Link reference definition rule (multiline)
+// markdown-yo — Link reference definition rule (multiline)
 //
 // Matches: [label]: destination "title"
 // Labels, destinations, and titles can span multiple lines.

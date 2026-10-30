@@ -1,4 +1,4 @@
-// markdown_yo — Core types and options
+// markdown-yo — Core types and options
 //
 // Enums and structs used throughout the parser, renderer, and CLI.
 { String } :: import("std/string");

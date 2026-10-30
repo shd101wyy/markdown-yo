@@ -1,4 +1,4 @@
-// markdown_yo — Inline backticks (code spans) rule
+// markdown-yo — Inline backticks (code spans) rule
 //
 // Matches: `code` or ``code with ` inside``
 // The number of opening and closing backticks must match.

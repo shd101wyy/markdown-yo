@@ -1,4 +1,4 @@
-// markdown_yo — Fenced code block
+// markdown-yo — Fenced code block
 //
 // Matches: ``` or ~~~ (3+ chars), optional info string on opening line
 pragma(Pragma.AllowUnsafe);

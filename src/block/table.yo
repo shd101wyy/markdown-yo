@@ -1,4 +1,4 @@
-// markdown_yo — GFM Table rule
+// markdown-yo — GFM Table rule
 //
 // Matches: pipe-delimited tables with header separator
 pragma(Pragma.AllowUnsafe);

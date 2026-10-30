@@ -45,8 +45,8 @@ jobs:
         run: |
           yo build wasm_api
           mkdir -p demo
-          cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.js   demo/markdown_yo_wasm_api.js
-          cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.wasm demo/markdown_yo_wasm_api.wasm
+          cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.js   demo/markdown-yo-wasm-api.js
+          cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.wasm demo/markdown-yo-wasm-api.wasm
 
       - name: Delete old github-pages artifact
         uses: actions/github-script@v7

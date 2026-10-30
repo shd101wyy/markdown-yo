@@ -1,4 +1,4 @@
-// markdown_yo — Emphasis post-processor
+// markdown-yo — Emphasis post-processor
 //
 // Matches open/close delimiter pairs and converts them to em/strong tokens.
 // Follows CommonMark "multiple of 3" rule.

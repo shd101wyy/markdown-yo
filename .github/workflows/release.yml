@@ -23,16 +23,16 @@ jobs:
         include:
           - os: macos-latest
             target: aarch64-apple-darwin
-            artifact: markdown_yo-macos-arm64
+            artifact: markdown-yo-macos-arm64
           - os: macos-26-intel
             target: x86_64-apple-darwin
-            artifact: markdown_yo-macos-x86_64
+            artifact: markdown-yo-macos-x86_64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact: markdown_yo-linux-x86_64
+            artifact: markdown-yo-linux-x86_64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact: markdown_yo-windows-x86_64
+            artifact: markdown-yo-windows-x86_64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -66,16 +66,16 @@ jobs:
       - name: Package binary (Unix)
         if: runner.os != 'Windows'
         run: |
-          cp yo-out/${{ matrix.target }}/bin/markdown_yo .
-          tar czf ${{ matrix.artifact }}.tar.gz markdown_yo
+          cp yo-out/${{ matrix.target }}/bin/markdown-yo .
+          tar czf ${{ matrix.artifact }}.tar.gz markdown-yo
           echo "ASSET=${{ matrix.artifact }}.tar.gz" >> $GITHUB_ENV
 
       - name: Package binary (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Copy-Item yo-out/${{ matrix.target }}/bin/markdown_yo.exe .
-          Compress-Archive -Path markdown_yo.exe -DestinationPath ${{ matrix.artifact }}.zip
+          Copy-Item yo-out/${{ matrix.target }}/bin/markdown-yo.exe .
+          Compress-Archive -Path markdown-yo.exe -DestinationPath ${{ matrix.artifact }}.zip
           echo "ASSET=${{ matrix.artifact }}.zip" >> $env:GITHUB_ENV
 
       - name: Upload artifact
@@ -111,21 +111,21 @@ jobs:
 
       - name: Prepare npm package
         run: |
-          cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.js  npm/markdown_yo_wasm_api.js
-          cp yo-out/wasm32-unknown-emscripten/bin/markdown_yo_wasm_api.wasm npm/markdown_yo_wasm_api.wasm
+          cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.js  npm/markdown-yo-wasm-api.js
+          cp yo-out/wasm32-unknown-emscripten/bin/markdown-yo-wasm-api.wasm npm/markdown-yo-wasm-api.wasm
           cp docs/WASM.md npm/README.md
 
       - name: Package WASM release artifact
         run: |
-          tar czf markdown_yo-wasm.tar.gz -C npm \
-            markdown_yo_wasm_api.js markdown_yo_wasm_api.wasm
-          echo "ASSET=markdown_yo-wasm.tar.gz" >> $GITHUB_ENV
+          tar czf markdown-yo-wasm.tar.gz -C npm \
+            markdown-yo-wasm-api.js markdown-yo-wasm-api.wasm
+          echo "ASSET=markdown-yo-wasm.tar.gz" >> $GITHUB_ENV
 
       - name: Upload WASM artifact
         uses: actions/upload-artifact@v4
         with:
-          name: markdown_yo-wasm
-          path: markdown_yo-wasm.tar.gz
+          name: markdown-yo-wasm
+          path: markdown-yo-wasm.tar.gz
 
       - name: Upload npm package
         uses: actions/upload-artifact@v4
@@ -210,15 +210,15 @@ jobs:
             ## Downloads
             | Platform | File |
             |----------|------|
-            | macOS (Apple Silicon) | `markdown_yo-macos-arm64.tar.gz` |
-            | macOS (Intel) | `markdown_yo-macos-x86_64.tar.gz` |
-            | Linux (x86_64) | `markdown_yo-linux-x86_64.tar.gz` |
-            | Windows (x86_64) | `markdown_yo-windows-x86_64.zip` |
-            | WebAssembly | `markdown_yo-wasm.tar.gz` |
+            | macOS (Apple Silicon) | `markdown-yo-macos-arm64.tar.gz` |
+            | macOS (Intel) | `markdown-yo-macos-x86_64.tar.gz` |
+            | Linux (x86_64) | `markdown-yo-linux-x86_64.tar.gz` |
+            | Windows (x86_64) | `markdown-yo-windows-x86_64.zip` |
+            | WebAssembly | `markdown-yo-wasm.tar.gz` |
 
             ## npm
             ```
-            npm install markdown_yo@${{ steps.version.outputs.version }}
+            npm install markdown-yo@${{ steps.version.outputs.version }}
             ```
           draft: false
           prerelease: false
@@ -229,8 +229,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/markdown_yo-macos-arm64/markdown_yo-macos-arm64.tar.gz
-          asset_name: markdown_yo-macos-arm64.tar.gz
+          asset_path: artifacts/markdown-yo-macos-arm64/markdown-yo-macos-arm64.tar.gz
+          asset_name: markdown-yo-macos-arm64.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload macOS x86_64
@@ -239,8 +239,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/markdown_yo-macos-x86_64/markdown_yo-macos-x86_64.tar.gz
-          asset_name: markdown_yo-macos-x86_64.tar.gz
+          asset_path: artifacts/markdown-yo-macos-x86_64/markdown-yo-macos-x86_64.tar.gz
+          asset_name: markdown-yo-macos-x86_64.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload Linux x86_64
@@ -249,8 +249,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/markdown_yo-linux-x86_64/markdown_yo-linux-x86_64.tar.gz
-          asset_name: markdown_yo-linux-x86_64.tar.gz
+          asset_path: artifacts/markdown-yo-linux-x86_64/markdown-yo-linux-x86_64.tar.gz
+          asset_name: markdown-yo-linux-x86_64.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload Windows x86_64
@@ -259,8 +259,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/markdown_yo-windows-x86_64/markdown_yo-windows-x86_64.zip
-          asset_name: markdown_yo-windows-x86_64.zip
+          asset_path: artifacts/markdown-yo-windows-x86_64/markdown-yo-windows-x86_64.zip
+          asset_name: markdown-yo-windows-x86_64.zip
           asset_content_type: application/zip
 
       - name: Upload WASM
@@ -269,8 +269,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/markdown_yo-wasm/markdown_yo-wasm.tar.gz
-          asset_name: markdown_yo-wasm.tar.gz
+          asset_path: artifacts/markdown-yo-wasm/markdown-yo-wasm.tar.gz
+          asset_name: markdown-yo-wasm.tar.gz
           asset_content_type: application/gzip
 
       - name: Publish to npm

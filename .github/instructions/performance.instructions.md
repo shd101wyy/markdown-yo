@@ -1,4 +1,4 @@
-# Performance Instructions for markdown_yo
+# Performance Instructions for markdown-yo
 
 ## Design Principles
 
@@ -26,10 +26,10 @@
 
 ```bash
 # macOS: Instruments
-xcrun xctrace record --template 'Time Profiler' --launch ./yo-out/*/bin/markdown_yo -- benchmark/samples/bench_5mb.md > /dev/null
+xcrun xctrace record --template 'Time Profiler' --launch ./yo-out/*/bin/markdown-yo -- benchmark/samples/bench_5mb.md > /dev/null
 
 # Linux: perf
-perf record -g ./yo-out/*/bin/markdown_yo benchmark/samples/bench_5mb.md > /dev/null
+perf record -g ./yo-out/*/bin/markdown-yo benchmark/samples/bench_5mb.md > /dev/null
 perf report
 ```
 
@@ -40,15 +40,15 @@ perf report
 node benchmark/run.js
 
 # Quick single-run timing
-time ./yo-out/*/bin/markdown_yo benchmark/samples/bench_5mb.md > /dev/null
+time ./yo-out/*/bin/markdown-yo benchmark/samples/bench_5mb.md > /dev/null
 
 # Memory usage (macOS)
-/usr/bin/time -l ./yo-out/*/bin/markdown_yo benchmark/samples/bench_5mb.md > /dev/null
+/usr/bin/time -l ./yo-out/*/bin/markdown-yo benchmark/samples/bench_5mb.md > /dev/null
 ```
 
 ## Performance Targets
 
-| Input | markdown-it | markdown_yo target | Speedup |
+| Input | markdown-it | markdown-yo target | Speedup |
 |-------|-------------|--------------------|---------|
 | 1 MB  | ~110ms      | <15ms              | 7×      |
 | 5 MB  | ~420ms      | <70ms              | 6×      |

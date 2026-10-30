@@ -1,4 +1,4 @@
-# markdown_yo — Plan
+# markdown-yo — Plan
 
 A fast, SAX-style markdown-to-HTML parser written in Yo, designed to match
 markdown-it's default output while achieving md4c-level performance.
@@ -322,7 +322,7 @@ benchmark/
 - [ ] WASM (Emscripten) build configuration in build.yo
 - [ ] WASM benchmark (Node.js WASM runtime)
 - [ ] Memory usage profiling (RSS, peak heap)
-- [ ] Comparative benchmark table: markdown-it vs markdown_yo (native) vs markdown_yo (WASM)
+- [ ] Comparative benchmark table: markdown-it vs markdown-yo (native) vs markdown-yo (WASM)
 - [ ] README with results and methodology
 
 ## Performance Strategy
@@ -348,7 +348,7 @@ benchmark/
 
 ### Target performance
 
-| Input | markdown-it (JS) | markdown_yo target |
+| Input | markdown-it (JS) | markdown-yo target |
 |-------|-------------------|-------------------|
 | 1 MB  | ~110ms           | <15ms (7×)        |
 | 5 MB  | ~420ms           | <70ms (6×)        |

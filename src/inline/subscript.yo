@@ -1,4 +1,4 @@
-// markdown_yo — Inline subscript marker rule
+// markdown-yo — Inline subscript marker rule
 //
 // Handles single ~ markers for subscript: ~text~
 // Must not conflict with ~~ strikethrough.

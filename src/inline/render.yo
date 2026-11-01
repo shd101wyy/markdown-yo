@@ -85,11 +85,11 @@ _process_smartquotes :: (
   ) -> unit
 )({
   (tok_count : i32) = i32(tokens.*.len());
-  (stack : ArrayList(_SQEntry)) = ArrayList(_SQEntry).new();
+  (mut(stack) : ArrayList(_SQEntry)) = ArrayList(_SQEntry).new();
 
   // Compute emphasis-aware nesting levels for each token.
   // Emphasis pairs increase the nesting level for tokens between them.
-  (levels : ArrayList(i32)) = ArrayList(i32).with_capacity(usize(tok_count));
+  (mut(levels) : ArrayList(i32)) = ArrayList(i32).with_capacity(usize(tok_count));
   (mut(li) : i32) = i32(0);
   while(li < tok_count, {
     _ := levels.push(i32(0));
@@ -366,7 +366,7 @@ _slice_to_string :: (fn(src : *(u8), start : i32, end : i32) -> String)({
     return(``);
   });
   (len : i32) = (end - start);
-  (result : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
   result.extend_from_ptr((src.add(usize(start))), usize(len));
   String.from_bytes(result)
 });

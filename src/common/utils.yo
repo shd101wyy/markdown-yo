@@ -291,7 +291,7 @@ append_lit :: (fn(out : *ArrayList(u8), s : str) -> unit)(
 // stable raw pointer to the bytes is needed; the copy must outlive the pointer.
 string_bytes :: (fn(s : &String) -> ArrayList(u8))({
   // `to_cstr` appends a NUL terminator; drop it.
-  (bytes : ArrayList(u8)) = s.to_cstr();
+  (mut(bytes) : ArrayList(u8)) = s.to_cstr();
   _ := bytes.pop();
   bytes
 });

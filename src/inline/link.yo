@@ -6,6 +6,7 @@
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
 { ArrayList } :: import("std/collections/array_list");
+{ MapEntry } :: import("std/collections/hash_map");
 { InlineState, InlineToken } :: import("./state.yo");
 { InlineType, Reference, LinkMarker, Delimiter, EmphasisPair } :: import("../types.yo");
 { is_space } :: import("../common/utils.yo");
@@ -346,7 +347,7 @@ _find_close_bracket :: (fn(src : *(u8), start : i32, max : i32) -> i32)({
 
 // Normalize a reference label: trim, collapse whitespace, lowercase ASCII
 _normalize_label :: (fn(src : *(u8), start : i32, end : i32) -> String)({
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
   (mut(p) : i32) = start;
   (mut(last_was_space) : bool) = true;
 
@@ -838,12 +839,16 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
     if((ref_start >= i32(0)), {
       (label : String) = _normalize_label(state.*.src_ptr, ref_start, ref_end);
       if((label.len() > usize(0)), {
-        (maybe_ref : Option(Reference)) = state.*.env.references.get(&label);
+        // Borrow the live entry: `Reference` holds `String`s, which are
+        // move-only values on the flipped std, so `get` (which copies the
+        // value out) cannot serve this read. Nothing rehashes the map between
+        // the borrow and the reads, so the entry pointer stays valid.
+        (maybe_entry : Option(*MapEntry(String, Reference))) = state.*.env.references.get_entry_ptr(&label);
         match(
-          maybe_ref,
-          .Some(r) => {
-            ref_href = r.href.clone();
-            ref_title = r.title.clone();
+          maybe_entry,
+          .Some(entry) => {
+            ref_href = entry.*.value.href.clone();
+            ref_title = entry.*.value.title.clone();
             is_ref = true;
           },
           .None => ()

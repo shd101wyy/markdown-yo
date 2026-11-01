@@ -66,7 +66,7 @@ block_fence :: (fn(state : *BlockState, start_line : i32, end_line : i32, silent
   (lang_start : i32) = info_start;
   (mut(lang_end) : i32) = info_start;
   (mut(found_ws) : bool) = false;
-  (tmp : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(4));
+  (mut(tmp) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(4));
   while((lang_end < em) && !found_ws, {
     (b : u8) = (state.*.src_ptr.add(usize(lang_end))).*;
     if(b == u8(0x26), {

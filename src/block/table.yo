@@ -302,7 +302,7 @@ block_table :: (fn(state : *(BlockState), start_line : i32, end_line : i32, sile
   });
 
   // Non-silent: re-parse separator line to get alignment info
-  (aligns : ArrayList(TableAlign)) = ArrayList(TableAlign).new();
+  (mut(aligns) : ArrayList(TableAlign)) = ArrayList(TableAlign).new();
   {
     (mut(rp) : i32) = sep_pos;
     if(((rp < sep_em) && (i32((state.*.src_ptr.add(usize(rp))).*) == i32(0x7C))), {

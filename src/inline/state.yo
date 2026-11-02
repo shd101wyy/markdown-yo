@@ -209,7 +209,11 @@ InlineState :: struct(
   // This avoids String RC overhead during get operations.
   _str_buf : ArrayList(u8),
   _str_offsets : ArrayList(i32),
-  env : Env,
+  // The parse's link-reference environment, shared with the block state:
+  // a pointer, because `Env` holds a `HashMap`, which is a uniquely owned
+  // value on a values-by-default std (a copy would split the references
+  // the block pass records from the ones the inline pass reads).
+  env : *Env,
   renderer : *HtmlRenderer,
   options : *Options,
   // 256-byte lookup table: table[ch] != 0 means ch is an inline special character
@@ -219,7 +223,7 @@ InlineState :: struct(
 impl(
   InlineState,
   // Create a reusable state with pre-allocated buffers
-  reusable : (fn(env : &Env, renderer : *HtmlRenderer, options : *Options) -> Self)(
+  reusable : (fn(env : *Env, renderer : *HtmlRenderer, options : *Options) -> Self)(
     Self(
       src : .None,
       src_ptr : (*u8)(""),

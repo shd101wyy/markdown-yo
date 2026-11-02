@@ -1013,7 +1013,7 @@ _render_footnote_section :: (fn(state : *BlockState) -> unit)({
       (order_val >= i32(0)) => r.*.fn_ref_counts.get(usize(order_val)).unwrap(),
       true => i32(1) // inline footnotes have exactly 1 reference
     );
-    (backref_buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(64));
+    (mut(backref_buf) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(64));
     (mut(sub) : i32) = i32(0);
     while(sub < backref_count, {
       append_lit(addr_of(backref_buf), " <a href=\"#fnref");

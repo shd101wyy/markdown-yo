@@ -77,7 +77,7 @@ BlockState :: struct(
 
 // Normalize source: replace \r\n → \n, lone \r → \n, \0 → U+FFFD (rare path)
 _normalize_source :: (fn(src_p : *u8, len : i32) -> ArrayList(u8))({
-  (out : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
+  (mut(out) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(len));
   (mut(i) : i32) = i32(0);
   (mut(run_start) : i32) = i32(0);
 
@@ -122,12 +122,12 @@ _normalize_source :: (fn(src_p : *u8, len : i32) -> ArrayList(u8))({
 _build_block_state_from_normalized :: (fn(src : ArrayList(u8), env : &Env, renderer : *HtmlRenderer, options : *Options) -> BlockState)({
   (len : i32) = i32(src.len());
   (est_lines : usize) = ((usize(len) / usize(40)) + usize(16));
-  (b_marks : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-  (e_marks : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-  (t_shift : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-  (s_count : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-  (bs_count : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-  (pipe_flags : ArrayList(u8)) = ArrayList(u8).with_capacity(est_lines);
+  (mut(b_marks) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+  (mut(e_marks) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+  (mut(t_shift) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+  (mut(s_count) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+  (mut(bs_count) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+  (mut(pipe_flags) : ArrayList(u8)) = ArrayList(u8).with_capacity(est_lines);
 
   (src_p : *u8) = match(
     src.ptr(),
@@ -284,12 +284,12 @@ impl(
 
     // Estimate line count for pre-allocation (avg ~40 bytes/line)
     (est_lines : usize) = ((usize(len) / usize(40)) + usize(16));
-    (b_marks : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-    (e_marks : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-    (t_shift : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-    (s_count : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-    (bs_count : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
-    (pipe_flags : ArrayList(u8)) = ArrayList(u8).with_capacity(est_lines);
+    (mut(b_marks) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+    (mut(e_marks) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+    (mut(t_shift) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+    (mut(s_count) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+    (mut(bs_count) : ArrayList(i32)) = ArrayList(i32).with_capacity(est_lines);
+    (mut(pipe_flags) : ArrayList(u8)) = ArrayList(u8).with_capacity(est_lines);
 
     (src_p : *u8) = match(
       src.ptr(),

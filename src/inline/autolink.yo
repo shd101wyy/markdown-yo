@@ -212,7 +212,7 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
         });
         // If valid email, build mailto: href right here
         if(domain_valid && has_dot, {
-          (buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(content_len + i32(7)));
+          (mut(buf) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(content_len + i32(7)));
           buf.extend_from_ptr((*u8)("mailto:"), usize(7));
           buf.extend_from_ptr(state.*.src_ptr.add(usize(content_start)), usize(content_len));
           email_href = String.from_bytes(buf);
@@ -229,7 +229,7 @@ inline_autolink :: (fn(state : *InlineState) -> bool)({
   // Build the href String for URI autolinks (raw content, no backslash processing)
   (mut(link_href) : String) = email_href;
   if(is_uri && !is_email, {
-    (buf : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(content_len));
+    (mut(buf) : ArrayList(u8)) = ArrayList(u8).with_capacity(usize(content_len));
     buf.extend_from_ptr(state.*.src_ptr.add(usize(content_start)), usize(content_len));
     link_href = String.from_bytes(buf);
   });

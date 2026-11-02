@@ -48,7 +48,7 @@ _read_file :: (fn(path : &String) -> Option(String))({
         return(.Some(String.new()));
       });
 
-      buf := ArrayList(u8).with_capacity(usize(size));
+      mut(buf) := ArrayList(u8).with_capacity(usize(size));
       buf.resize_with_byte(usize(size), int(0));
 
       (n : usize) = match(
@@ -65,8 +65,8 @@ _read_file :: (fn(path : &String) -> Option(String))({
 
 // Read all of stdin into a String
 _read_stdin :: (fn() -> String)({
-  buf := ArrayList(u8).with_capacity(usize(4096));
-  chunk := ArrayList(u8).with_capacity(usize(4096));
+  mut(buf) := ArrayList(u8).with_capacity(usize(4096));
+  mut(chunk) := ArrayList(u8).with_capacity(usize(4096));
   chunk.resize_with_byte(usize(4096), int(0));
 
   while(runtime(true), {
@@ -126,7 +126,7 @@ main :: (fn() -> unit)({
 
   (mut(ai) : usize) = usize(1);
   while(ai < argv.len(), {
-    (arg : String) = argv.get(ai).unwrap();
+    (arg : String) = argv.get_cloned(ai).unwrap();
     cond(
       ((arg == `--help`) || (arg == `-h`)) => {
         _ := unsafe(fputs((*char)((*u8)(_HELP_TEXT)), stdout));
@@ -192,7 +192,7 @@ main :: (fn() -> unit)({
       (arg == `--repeat`) => {
         ai = (ai + usize(1));
         if(ai < argv.len(), {
-          (nstr : String) = argv.get(ai).unwrap();
+          (nstr : String) = argv.get_cloned(ai).unwrap();
           repeat_count = nstr.parse_i32().unwrap_or(i32(1));
         });
       },

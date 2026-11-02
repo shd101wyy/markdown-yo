@@ -35,7 +35,7 @@ normalize :: (fn(src : &String) -> String)({
   (bytes : ArrayList(u8)) = string_bytes(src);
 
   // Single-pass replacement
-  (out : ArrayList(u8)) = ArrayList(u8).with_capacity(len);
+  (mut(out) : ArrayList(u8)) = ArrayList(u8).with_capacity(len);
   (mut(i) : usize) = usize(0);
   (mut(run_start) : usize) = usize(0);
 

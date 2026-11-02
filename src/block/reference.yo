@@ -18,7 +18,7 @@ pragma(Pragma.AllowUnsafe);
 // markdown-it's normalizeReference behavior.
 // Also treats newlines as whitespace (for multiline labels)
 _normalize_label :: (fn(src : *u8, start : i32, end : i32) -> String)({
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
   (mut(p) : i32) = start;
   (mut(last_was_space) : bool) = true;
 
@@ -172,7 +172,7 @@ _normalize_label :: (fn(src : *u8, start : i32, end : i32) -> String)({
 // Unescape a byte range: handle backslash escapes and HTML entity decoding
 // This matches markdown-it's unescapeAll behavior
 _unescape_range :: (fn(src : *u8, start : i32, end : i32) -> String)({
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
   (mut(p) : i32) = start;
 
   while(p < end, {
@@ -231,7 +231,7 @@ block_reference :: (fn(state : *BlockState, start_line : i32, end_line : i32, si
 
   // Build concatenated string buffer (like markdown-it)
   // Each line is appended as: content from tShift to eMarks + newline
-  (str_buf : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(str_buf) : ArrayList(u8)) = ArrayList(u8).new();
   {
     (mut(p) : i32) = initial_pos;
     (copy_end : i32) = cond(
@@ -718,16 +718,13 @@ block_reference :: (fn(state : *BlockState, start_line : i32, end_line : i32, si
     true => ``
   );
 
-  // Store reference only if not already defined (first definition wins)
-  (existing : Option(Reference)) = state.*.env.references.get(&label_str);
-  match(
-    existing,
-    .Some(_) => (),
-    .None => {
-      (ref : Reference) = Reference(href : dest_str, title : title_str);
-      state.*.env.references.insert(label_str, ref);
-    }
-  );
+  // Store reference only if not already defined (first definition wins).
+  // `contains_key` borrows the map: `Reference` holds move-only `String`s on
+  // the flipped std, so `get`'s value copy cannot serve a presence check.
+  if(state.*.env.references.contains_key(&label_str), (), {
+    (ref : Reference) = Reference(href : dest_str, title : title_str);
+    state.*.env.references.insert(label_str, ref);
+  });
 
   state.*.line = next_line;
   true

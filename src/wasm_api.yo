@@ -51,7 +51,7 @@ wasm_render :: (fn(input_ptr : *u8, input_len : i32, flags : i32) -> *u8)({
   (ilen : usize) = usize(input_len);
 
   // Build input String from raw bytes
-  buf := ArrayList(u8).with_capacity(ilen);
+  mut(buf) := ArrayList(u8).with_capacity(ilen);
   buf.extend_from_ptr(input_ptr, ilen);
   input := String.from_bytes(buf);
 

@@ -65,7 +65,7 @@ punycode_decode :: (fn(input : str) -> Option(String))({
   });
 
   // Collect output codepoints in an array
-  (output : ArrayList(i32)) = ArrayList(i32).new();
+  (mut(output) : ArrayList(i32)) = ArrayList(i32).new();
 
   // Copy basic codepoints
   if(basic_end > i32(0), {
@@ -136,7 +136,7 @@ punycode_decode :: (fn(input : str) -> Option(String))({
   });
 
   // Convert codepoints to UTF-8
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
   (mut(r) : i32) = i32(0);
   while(r < i32(output.len()), {
     (cp : i32) = output(usize(r));
@@ -170,7 +170,7 @@ punycode_encode :: (fn(input : str) -> String)({
   // First, decode UTF-8 to codepoints. Every continuation read is bounds-checked:
   // normalize_link percent-decodes a domain into a fresh buffer and hands it here,
   // so `[l](http://a%F0/)` arrives as a truncated sequence at the buffer's end.
-  (codepoints : ArrayList(i32)) = ArrayList(i32).new();
+  (mut(codepoints) : ArrayList(i32)) = ArrayList(i32).new();
   (mut(p) : i32) = i32(0);
   while(p < len, {
     (b : i32) = i32((src.add(usize(p))).*);
@@ -197,7 +197,7 @@ punycode_encode :: (fn(input : str) -> String)({
     _ := codepoints.push(cp);
   });
 
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
 
   // Copy basic codepoints
   (mut(basic_count) : i32) = i32(0);
@@ -294,7 +294,7 @@ _has_non_ascii :: (fn(src : *u8, start : i32, end : i32) -> bool)({
 encode_domain :: (fn(domain_ptr : *u8, domain_len : i32) -> String)({
   (src : *u8) = domain_ptr;
   (len : i32) = domain_len;
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
 
   (mut(start) : i32) = i32(0);
   while(start < len, {
@@ -344,7 +344,7 @@ encode_domain :: (fn(domain_ptr : *u8, domain_len : i32) -> String)({
 decode_domain :: (fn(domain_ptr : *u8, domain_len : i32) -> String)({
   (src : *u8) = domain_ptr;
   (len : i32) = domain_len;
-  (result : ArrayList(u8)) = ArrayList(u8).new();
+  (mut(result) : ArrayList(u8)) = ArrayList(u8).new();
 
   (mut(start) : i32) = i32(0);
   while(start < len, {

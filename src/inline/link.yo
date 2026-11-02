@@ -843,7 +843,7 @@ inline_link_close :: (fn(state : *(InlineState)) -> bool)({
         // move-only values on the flipped std, so `get` (which copies the
         // value out) cannot serve this read. Nothing rehashes the map between
         // the borrow and the reads, so the entry pointer stays valid.
-        (maybe_entry : Option(*MapEntry(String, Reference))) = state.*.env.references.get_entry_ptr(&label);
+        (maybe_entry : Option(*MapEntry(String, Reference))) = state.*.env.*.references.get_entry_ptr(&label);
         match(
           maybe_entry,
           .Some(entry) => {

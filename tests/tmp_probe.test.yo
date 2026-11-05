@@ -1,0 +1,10 @@
+{ assert } :: import("std/assert");
+{ String } :: import("std/string");
+{ println } :: import("std/fmt");
+{ markdown_to_html, Options, default_options } :: import("../src/lib.yo");
+test("probe", {
+  (a : String) = String.from("<a@example.com>\n");
+  println(markdown_to_html(&a, default_options()));
+  (b : String) = String.from("<aZ09.!#$%&'*+/=?^_`{|}~-@example.com>\n");
+  println(markdown_to_html(&b, default_options()));
+});

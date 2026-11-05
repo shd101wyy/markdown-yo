@@ -30,56 +30,31 @@ _is_scheme_char :: (fn(ch : i32) -> bool)(
 );
 
 // Check if character is valid in email local part: [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]
-_is_email_local_char :: (fn(ch : i32) -> bool)(((ch >= i32(0x41)) && (ch <= i32(0x5A))) ||
-  (
-    ((ch >= i32(0x61)) && (ch <= i32(0x7A))) ||
-      (
-        ((ch >= i32(0x30)) && (ch <= i32(0x39))) ||
-          (
-            (ch == i32(0x2E)) || (
-              (ch == i32(0x21)) || (
-                (ch == i32(0x23)) ||
-                  (
-                    (ch == i32(0x24)) || (
-                      (ch == i32(0x25)) || (
-                        (ch == i32(0x26)) ||
-                          (
-                            (ch == i32(0x27)) || (
-                              (ch == i32(0x2A)) || (
-                                (ch == i32(0x2B)) ||
-                                  (
-                                    (ch == i32(0x2F)) || (
-                                      (ch == i32(0x3D)) || (
-                                        (ch == i32(0x3F)) ||
-                                          (
-                                            (ch == i32(0x5E)) || (
-                                              (ch == i32(0x5F)) || (
-                                                (ch == i32(0x60)) ||
-                                                  (
-                                                    (ch == i32(0x7B)) || (
-                                                      (ch == i32(0x7C)) || (
-                                                        (ch == i32(0x7D)) ||
-                                                          ((ch == i32(0x7E)) || (ch == i32(0x2D)))
-                                                      )
-                                                    )
-                                                  )
-                                              )
-                                            )
-                                          )
-                                      )
-                                    )
-                                  )
-                              )
-                            )
-                          )
-                      )
-                    )
-                  )
-              )
-            )
-          )
-      )
-  );
+_is_email_local_char :: (fn(ch : i32) -> bool)(
+  ((ch >= i32(0x41)) && (ch <= i32(0x5A)))
+  || ((ch >= i32(0x61)) && (ch <= i32(0x7A)))
+  || ((ch >= i32(0x30)) && (ch <= i32(0x39)))
+  || (ch == i32(0x2E))
+  || (ch == i32(0x21))
+  || (ch == i32(0x23))
+  || (ch == i32(0x24))
+  || (ch == i32(0x25))
+  || (ch == i32(0x26))
+  || (ch == i32(0x27))
+  || (ch == i32(0x2A))
+  || (ch == i32(0x2B))
+  || (ch == i32(0x2F))
+  || (ch == i32(0x3D))
+  || (ch == i32(0x3F))
+  || (ch == i32(0x5E))
+  || (ch == i32(0x5F))
+  || (ch == i32(0x60))
+  || (ch == i32(0x7B))
+  || (ch == i32(0x7C))
+  || (ch == i32(0x7D))
+  || (ch == i32(0x7E))
+  || (ch == i32(0x2D))
+);
 
 // Check if character is valid in email domain: [a-zA-Z0-9-]
 _is_email_domain_char :: (fn(ch : i32) -> bool)(

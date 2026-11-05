@@ -118,3 +118,12 @@ test("a repeated footnote label finishes and the last definition wins", {
   html2 := markdown_to_html(&in_quote, &opts);
   assert(html2.contains("<blockquote>"), `repeated label inside a blockquote: got ${html2}`);
 });
+
+// `_is_email_local_char` was one `)` short; the parser accepted the unclosed
+// call until Yo v0.2.76 (Yo's issues/fixed/2026-11-05-a-call-missing-its-closing-paren-before-a-semicolon-parses.md).
+// Every character class it accepts makes an email autolink.
+test("an email autolink accepts every local-part character", {
+  (src : String) = String.from("<aZ09.!#$%&'*+/=?^_`{|}~-@example.com>\n");
+  html := markdown_to_html(&src, default_options());
+  assert(html == String.from("<p><a href=\"mailto:aZ09.!#$%25&amp;'*+/=?%5E_%60%7B%7C%7D~-@example.com\">aZ09.!#$%&amp;'*+/=?^_`{|}~-@example.com</a></p>\n"), `email autolink: got ${html}`);
+});

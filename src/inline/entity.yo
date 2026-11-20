@@ -2,7 +2,7 @@
 //
 // Matches: &amp;, &lt;, &#123;, &#x1F4A9; etc.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
 { decode_named_entity } :: import("../common/entities.yo");
 

@@ -4,7 +4,7 @@
 // Uses emphasis-style flanking rules and delimiter pair resolution.
 // Minimum 2 consecutive = signs to open/close.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
 { Delimiter } :: import("../types.yo");
 { is_white_space, is_punct_char } :: import("../common/utils.yo");

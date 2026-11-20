@@ -3,7 +3,7 @@
 // Matches: pipe-delimited tables with header separator
 pragma(Pragma.AllowUnsafe);
 import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { BlockState } :: import("./state.yo");
 { is_space, escape_html_buf } :: import("../common/utils.yo");
 { TableAlign } :: import("../types.yo");
@@ -12,7 +12,7 @@ import("std/string");
 { block_blockquote } :: import("./blockquote.yo");
 { block_hr } :: import("./hr.yo");
 { block_list } :: import("./list.yo");
-{ block_html } :: import("./html_block.yo");
+{ block_html } :: import("./html-block.yo");
 { block_heading } :: import("./heading.yo");
 
 // Parse cells from a table row line and emit td/th tags.

@@ -4,7 +4,7 @@
 //
 // DO NOT EDIT — regenerate with: node scripts/generate_emoji_data.mjs > src/data/emoji_data.yo
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 
 lookup_emoji :: (fn(name_ptr : *u8, name_len : i32, buf : *ArrayList(u8)) -> bool)({
   if(name_len < i32(1), {

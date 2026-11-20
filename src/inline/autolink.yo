@@ -7,9 +7,9 @@ pragma(Pragma.AllowUnsafe);
 { InlineState, InlineToken } :: import("./state.yo");
 { is_space } :: import("../common/utils.yo");
 { validate_link_url } :: import("./link.yo");
-{ normalize_link_text } :: import("../common/normalize_link.yo");
+{ normalize_link_text } :: import("../common/normalize-link.yo");
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 
 // Check if character is a letter (a-z, A-Z)
 _is_letter :: (fn(ch : i32) -> bool)(

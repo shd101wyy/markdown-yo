@@ -7,7 +7,7 @@
 pragma(Pragma.AllowUnsafe);
 { assert } :: import("std/assert");
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { GlobalAllocator } :: import("std/allocator");
 { calloc } :: GlobalAllocator;
 

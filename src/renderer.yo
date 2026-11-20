@@ -4,12 +4,12 @@
 // Writes directly to an ArrayList(u8) output buffer — no intermediate Strings.
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { memmove } :: import("std/libc/string");
 { Options, TableAlign, AbbrEntry, FootnoteDef } :: import("./types.yo");
 { escape_html_buf, escape_html_string, append_raw_buf, append_lit, append_string } :: import("./common/utils.yo");
 { decode_named_entity } :: import("./common/entities.yo");
-{ lookup_emoji } :: import("./data/emoji_data.yo");
+{ lookup_emoji } :: import("./data/emoji-data.yo");
 
 // In-place move: copy `count` bytes from s+src_off to s+dst_off (skip when equal)
 _memmove_inline :: (fn(s : *u8, dst_off : usize, src_off : usize, count : usize) -> unit)(

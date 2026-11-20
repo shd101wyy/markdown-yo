@@ -3,7 +3,7 @@
 // Shared by inline render pass and reference definition parser.
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { decode_named_entity } :: import("./entities.yo");
 
 // Check if a numeric entity codepoint is valid for decoding.

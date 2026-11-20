@@ -13,7 +13,7 @@ pragma(Pragma.AllowUnsafe);
 { block_fence } :: import("./fence.yo");
 { block_hr } :: import("./hr.yo");
 { block_list } :: import("./list.yo");
-{ block_html } :: import("./html_block.yo");
+{ block_html } :: import("./html-block.yo");
 
 // Scan blockquote lines and adjust state arrays.
 // Returns bq_end (the line AFTER the blockquote), or -1 if no match.

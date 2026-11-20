@@ -3,7 +3,7 @@
 // Matches open/close delimiter pairs and converts them to em/strong tokens.
 // Follows CommonMark "multiple of 3" rule.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
 { Delimiter, InlineType } :: import("../types.yo");
 

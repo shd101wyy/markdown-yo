@@ -32,7 +32,7 @@
 //   Module._wasm_free(ptr);
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { malloc, free } :: import("std/libc/stdlib");
 { memcpy } :: import("std/libc/string");
 { markdown_to_html } :: import("./parser.yo");

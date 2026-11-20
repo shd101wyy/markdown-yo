@@ -6,7 +6,7 @@
 // List and blockquote handle recursive block_tokenize calls inline here.
 pragma(Pragma.AllowUnsafe);
 import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { memmove } :: import("std/libc/string");
 { Options, ParentType, FootnoteDef } :: import("../types.yo");
 { HtmlRenderer, _write_i32 } :: import("../renderer.yo");
@@ -22,7 +22,7 @@ import("std/string");
 { block_blockquote, blockquote_find_end } :: import("./blockquote.yo");
 { check_callout_marker, is_known_callout_type } :: import("./callout.yo");
 { block_list, skip_bullet_list_marker, skip_ordered_list_marker, parse_list_number } :: import("./list.yo");
-{ block_html } :: import("./html_block.yo");
+{ block_html } :: import("./html-block.yo");
 { block_table } :: import("./table.yo");
 { block_reference } :: import("./reference.yo");
 { block_abbr, prescan_abbr } :: import("./abbr.yo");

@@ -3,8 +3,8 @@
 // Tracks line positions, indentation, and nesting for block-level parsing.
 // Line markers are precomputed once for O(1) line access.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
-{ HashMap } :: import("std/collections/hash_map");
+{ ArrayList } :: import("std/collections/array-list");
+{ HashMap } :: import("std/collections/hash-map");
 { memchr } :: import("std/libc/string");
 { Options, ParentType, Reference, Env } :: import("../types.yo");
 { HtmlRenderer } :: import("../renderer.yo");

@@ -5,8 +5,8 @@
 // 2. inline_link_close: when ] is seen, try to resolve as link/image
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
-{ MapEntry } :: import("std/collections/hash_map");
+{ ArrayList } :: import("std/collections/array-list");
+{ MapEntry } :: import("std/collections/hash-map");
 { InlineState, InlineToken } :: import("./state.yo");
 { InlineType, Reference, LinkMarker, Delimiter, EmphasisPair } :: import("../types.yo");
 { is_space } :: import("../common/utils.yo");

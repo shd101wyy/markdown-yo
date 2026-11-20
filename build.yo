@@ -19,7 +19,7 @@ wasm_exe.add_c_flags("-O3 -flto -mbulk-memory -sNODERAWFS -sEXIT_RUNTIME=1 -sALL
 
 wasm_api :: build.executable(.{
   name : "markdown-yo-wasm-api",
-  root : "./src/wasm_api.yo",
+  root : "./src/wasm-api.yo",
   target : build.CompilationTarget.Wasm32_Unknown_Emscripten,
   optimize : build.Optimize.ReleaseSmall,
   allocator : build.AllocatorKind.System

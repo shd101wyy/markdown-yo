@@ -3,7 +3,7 @@
 // Matches: ``` or ~~~ (3+ chars), optional info string on opening line
 pragma(Pragma.AllowUnsafe);
 import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { BlockState } :: import("./state.yo");
 { HtmlRenderer } :: import("../renderer.yo");
 { is_space, escape_html_buf } :: import("../common/utils.yo");

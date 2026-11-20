@@ -2,7 +2,7 @@
 //
 // Matches ~~ delimiter pairs and marks them for rendering.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
 { Delimiter } :: import("../types.yo");
 

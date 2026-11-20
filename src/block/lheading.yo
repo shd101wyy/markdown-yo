@@ -3,7 +3,7 @@
 // Matches: text followed by === (h1) or --- (h2) underline
 pragma(Pragma.AllowUnsafe);
 import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { BlockState } :: import("./state.yo");
 { is_space } :: import("../common/utils.yo");
 { ParentType } :: import("../types.yo");

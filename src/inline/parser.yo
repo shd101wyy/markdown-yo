@@ -5,7 +5,7 @@
 // determined the inline content range.
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineType } :: import("../types.yo");
 { InlineState, InlineToken } :: import("./state.yo");
 { inline_escape } :: import("./escape.yo");
@@ -19,7 +19,7 @@ pragma(Pragma.AllowUnsafe);
 { inline_link_open, inline_link_close } :: import("./link.yo");
 { inline_newline } :: import("./newline.yo");
 { inline_autolink } :: import("./autolink.yo");
-{ inline_html } :: import("./html_inline.yo");
+{ inline_html } :: import("./html-inline.yo");
 { inline_entity } :: import("./entity.yo");
 { inline_emoji } :: import("./emoji.yo");
 { inline_wikilink } :: import("./wikilink.yo");

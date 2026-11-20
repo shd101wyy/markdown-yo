@@ -3,9 +3,9 @@
 // Matches :shortname: patterns and replaces them with Unicode emoji.
 // Uses the same pattern as entity.yo — validates at parse time, decodes at render time.
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
-{ lookup_emoji } :: import("../data/emoji_data.yo");
+{ lookup_emoji } :: import("../data/emoji-data.yo");
 
 // Check if ch is a valid emoji shortname character [a-z0-9_+-]
 _is_emoji_char :: (fn(ch : i32) -> bool)(

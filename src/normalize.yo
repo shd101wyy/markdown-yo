@@ -4,7 +4,7 @@
 // Returns the normalized copy when changes are needed; otherwise a copy of the input.
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { string_bytes } :: import("./common/utils.yo");
 
 // Normalize source: unify line endings, replace NULL chars.

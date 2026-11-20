@@ -6,11 +6,11 @@
 // 4. Dispatches each token to the HtmlRenderer
 pragma(Pragma.AllowUnsafe);
 { String } :: import("std/string");
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { InlineState, InlineToken } :: import("./state.yo");
 { HtmlRenderer } :: import("../renderer.yo");
 { Delimiter, InlineType, EmphasisPair } :: import("../types.yo");
-{ normalize_link, normalize_link_buf } :: import("../common/normalize_link.yo");
+{ normalize_link, normalize_link_buf } :: import("../common/normalize-link.yo");
 { unescaped_slice, unescaped_slice_buf } :: import("../common/unescape.yo");
 { is_white_space, is_punct_char, is_md_ascii_punct, escape_html_buf } :: import("../common/utils.yo");
 

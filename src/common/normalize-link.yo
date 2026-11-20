@@ -8,7 +8,7 @@
 // - Invalid surrogate pairs become U+FFFD
 // - Domain names with non-ASCII are punycode-encoded (IDN)
 pragma(Pragma.AllowUnsafe);
-{ ArrayList } :: import("std/collections/array_list");
+{ ArrayList } :: import("std/collections/array-list");
 { String } :: import("std/string");
 { encode_domain, decode_domain } :: import("./punycode.yo");
 { append_string } :: import("./utils.yo");

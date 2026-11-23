@@ -332,7 +332,7 @@ _try_cdata :: (fn(src : *u8, pos : i32, max : i32) -> i32)({
 });
 
 inline_html :: (fn(state : *InlineState) -> bool)({
-  if(!(state.*.options.html), {
+  if(!(state.*.options.*.html), {
     return(false);
   });
 

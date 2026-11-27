@@ -722,8 +722,8 @@ block_reference :: (fn(state : *BlockState, start_line : i32, end_line : i32, si
   // `contains_key` borrows the map: `Reference` holds move-only `String`s on
   // the flipped std, so `get`'s value copy cannot serve a presence check.
   if(state.*.env.*.references.contains_key(&label_str), (), {
-    (ref : Reference) = Reference(href : dest_str, title : title_str);
-    state.*.env.*.references.insert(label_str, ref);
+    (reference : Reference) = Reference(href : dest_str, title : title_str);
+    state.*.env.*.references.insert(label_str, reference);
   });
 
   state.*.line = next_line;
